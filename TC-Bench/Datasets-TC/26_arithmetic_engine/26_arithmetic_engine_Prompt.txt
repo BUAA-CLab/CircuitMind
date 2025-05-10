@@ -1,0 +1,14 @@
+Design a logic device that can perform different bitwise logical and arithmetic operations on two 8-bit inputs A and B. The operation is selected by a 3-bit instruction (opcode). The operations supported are:
+0 (OR): Perform bitwise OR.
+1 (NAND): Perform bitwise NAND.
+2 (NOR): Perform bitwise NOR.
+3 (AND): Perform bitwise AND.
+4 (ADD): Perform addition.
+5 (SUB): Perform subtraction.
+**Module Interface:**
+module arithmetic_engine(
+    input [7:0] A,        // 8-bit input A
+    input [7:0] B,        // 8-bit input B
+    input [2:0] opcode,   // 2-bit opcode to select operation
+    output reg [7:0] result // 8-bit result
+);

@@ -1,0 +1,7 @@
+Two 1-bit input signals a and b. Compute their binary sum, outputting the result as Sum (0 or 1) and Carry (1 if there is a carry).
+module half_adder (
+    input wire a,       // First input
+    input wire b,       // Second input
+    output wire Sum,    // Sum of a and b
+    output wire Carry   // Carry of a and b
+);

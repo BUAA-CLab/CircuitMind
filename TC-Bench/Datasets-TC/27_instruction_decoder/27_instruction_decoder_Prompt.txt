@@ -1,0 +1,6 @@
+Design a decoder circuit that selects one of four modes based on the two most significant bits of an 8-bit instruction. The module should output 4 individual 1-bit signals, where only one signal is high depending on the value of the two highest bits of the input instruction.
+module instruction_decoder ( input [7:0] instruction, // 8-bit input instruction 
+    output reg mode0, // Output for mode 0 
+    output reg mode1, // Output for mode 1 
+    output reg mode2, // Output for mode 2 
+    output reg mode3 // Output for mode 3 );

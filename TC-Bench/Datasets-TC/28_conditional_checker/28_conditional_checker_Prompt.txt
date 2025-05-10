@@ -1,0 +1,20 @@
+Design a conditional checker circuit that checks an 8-bit signed value against a specified condition and outputs high (1) if the condition is true, or low (0) otherwise. The condition to be checked is selected using a 3-bit condition code, which corresponds to one of the following conditions:
+
+000: Never (Always False). This condition always evaluates to false, regardless of the input value.
+001: Value equals 0. This condition is true if the input value is exactly equal to zero.
+010: Value less than 0 (Signed Comparison). This condition is true if the input value, interpreted as a signed 8-bit **two's complement** number, is strictly less than zero (i.e., negative).
+011: Value less than or equal to 0 (Signed Comparison). This condition is true if the input value, interpreted as a signed 8-bit **two's complement** number, is less than or equal to zero (i.e., negative or zero).
+100: Always (Always True). This condition always evaluates to true, regardless of the input value.
+101: Value not equal to 0. This condition is true if the input value is not equal to zero.
+110: Value greater than or equal to 0 (Signed Comparison). This condition is true if the input value, interpreted as a signed 8-bit **two's complement** number, is greater than or equal to zero (i.e., non-negative).
+111: Value greater than 0 (Signed Comparison). This condition is true if the input value, interpreted as a signed 8-bit **two's complement** number, is strictly greater than zero (i.e., positive).
+
+**Initial State on Power-Up:** Upon power-up or at the start of simulation, the initial output `result` is undefined (or may be initialized to 'x' in simulation).
+
+The module should be named `conditional_checker` and have the following ports:
+**Module Interface:**
+module conditional_checker (
+    input signed [7:0] value,        // Signed 8-bit input value
+    input [2:0] condition,    // 3-bit condition code
+    output result         // Output result: high for true, low for false
+);

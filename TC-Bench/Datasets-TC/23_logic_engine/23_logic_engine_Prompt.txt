@@ -1,0 +1,25 @@
+Design a logic device that performs bitwise logical operations on two **8-bit input signals** A and B. The type of operation is dynamically selected by a **2-bit instruction (opcode)**.
+
+**Functionality:**
+
+The `logic_engine` module should implement a combinational logic circuit that selects and performs one of the following bitwise logical operations on the 8-bit inputs `A` and `B`, based on the 2-bit `opcode` input:
+
+*   **Opcode 0 (2'b00): OR** - Perform bitwise OR operation between `A` and `B`.
+*   **Opcode 1 (2'b01): NAND** - Perform bitwise NAND operation between `A` and `B`.
+*   **Opcode 2 (2'b10): NOR** - Perform bitwise NOR operation between `A` and `B`.
+*   **Opcode 3 (2'b11): AND** - Perform bitwise AND operation between `A` and `B`.
+
+The device should dynamically select the operation based on the `opcode` value and output the 8-bit result on the `result` output port.
+
+**Behavior for Invalid Opcode:**
+
+For `opcode` input values **outside the defined range of 0-3 (i.e., 2'b100, 2'b101, 2'b110, 2'b111)**, the output `result` behavior is considered **undefined**, or may default to a specific value (e.g., all bits set to 0).  However, the design is primarily intended and tested for `opcode` values within the 0-3 range.
+
+**Module Interface:**
+
+module logic_engine (
+    input [7:0] A,         // 8-bit input A
+    input [7:0] B,         // 8-bit input B
+    input [1:0] opcode,    // 2-bit opcode to select operation
+    output wire [7:0] result // 8-bit result output (combinational)
+);

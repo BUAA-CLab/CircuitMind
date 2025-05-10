@@ -1,0 +1,6 @@
+Two 1-bit input signals a and b, produce their XOR result.
+module xor_gate(
+    input wire a,
+    input wire b,
+    output wire y
+);

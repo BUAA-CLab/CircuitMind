@@ -1,0 +1,25 @@
+Subfolder,游戏关卡名称,phi4:latest-less_gates
+1_not_gate,NOT Gate,1
+2_second_tick,Second Tick,2
+3_xor_gate,XOR Gate,5
+4_or3_gate,Bigger OR Gate,2
+5_and3_gate,Bigger AND Gate,2
+6_xnor_gate,XNOR Gate,5
+7_double_trouble,Double Trouble,11
+10_half_adder,Half Adder,6
+11_full_adder,Full Adder,13
+12_odd_change,Odd Ticks,8
+13_inverter_1bit,Bit Inverter,5
+14_or_8bit,Byte OR,8
+15_not_8bit,Byte NOT,8
+16_adder_8bit,Adding Bytes,13
+17_mux_8bit,Input Selector,18
+18_opposite_number,Signed Negator,15
+19_elegant_storage,Saving Gracefully,23
+20_store_byte,Saving Bytes,50
+21_decoder_1bit,1 Bit Decoder,1
+22_decoder_3bit,3 Bit Decoder,15
+23_logic_engine,Logic Engine,19
+25_counter,Counter,15
+27_instruction_decoder,Instruction Decoder,6
+28_conditional_checker,Conditions,2

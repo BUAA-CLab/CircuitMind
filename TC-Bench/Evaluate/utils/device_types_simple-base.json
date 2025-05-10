@@ -1,0 +1,98 @@
+{
+  "__XOR_": {
+    "inputs": [
+      "A",
+      "B"
+    ],
+    "outputs": [
+      "Y"
+    ],
+    "port_order": [
+      "A",
+      "B",
+      "Y"
+    ],
+    "delay": 6,
+    "gate_num": 5
+  },
+  "__OR_": {
+    "inputs": [
+      "A",
+      "B"
+    ],
+    "outputs": [
+      "Y"
+    ],
+    "port_order": [
+      "A",
+      "B",
+      "Y"
+    ],
+    "delay": 2,
+    "gate_num": 1
+  },
+  "__NAND_": {
+    "inputs": [
+      "A",
+      "B"
+    ],
+    "outputs": [
+      "Y"
+    ],
+    "port_order": [
+      "A",
+      "B",
+      "Y"
+    ],
+    "delay": 2,
+    "gate_num": 1
+  },
+  "__AND_": {
+    "inputs": [
+      "A",
+      "B"
+    ],
+    "outputs": [
+      "Y"
+    ],
+    "port_order": [
+      "A",
+      "B",
+      "Y"
+    ],
+    "delay": 2,
+    "gate_num": 1
+  },
+  "__NOT_": {
+    "inputs": [
+      "A"
+    ],
+    "outputs": [
+      "Y"
+    ],
+    "port_order": [
+      "A",
+      "Y"
+    ],
+    "delay": 2,
+    "gate_num": 1
+  },
+  "__MUX_": {
+    "inputs": [
+      "A",
+      "B",
+      "S"
+    ],
+    "outputs": [
+      "Y"
+    ],
+    "port_order": [
+      "A",
+      "B",
+      "S",
+      "Y"
+    ],
+    "delay": 4,
+    "gate_num": 3
+  }
+}

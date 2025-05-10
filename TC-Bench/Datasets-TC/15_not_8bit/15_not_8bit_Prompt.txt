@@ -1,0 +1,5 @@
+Two 8-bit input signals a. Perform a bitwise NOT operation and output the result as an 8-bit signal y.
+module not_8bit(
+    input wire [7:0] a,
+    output wire [7:0] y
+);

@@ -1,0 +1,6 @@
+A 1-bit input signal a and a control signal inv_signal. If inv_signal is high, the output y is the inverted value of a. Otherwise, y equals a.
+module inverter_1bit (
+    input wire a,            // Input signal
+    input wire inv_signal,   // Inversion control signal
+    output wire y            // Output signal
+);

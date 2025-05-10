@@ -1,0 +1,6 @@
+Two 1-bit input signals a and b, produce their XNOR result.
+module xnor_gate(
+    input wire a,
+    input wire b,
+    output wire y
+);

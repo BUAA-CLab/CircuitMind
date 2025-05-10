@@ -1,0 +1,24 @@
+**Design Goal: Synchronous Reset Toggling Output Circuit**
+
+**Functionality:**
+
+The `odd_change` module must generate an output signal `dout` that toggles between high and low levels on each clock cycle. **The cycle count for determining odd and even cycles begins from the first clock cycle immediately following the release of the reset signal.** The `dout` signal should be high during odd-numbered clock cycles and low during even-numbered clock cycles.
+
+**Reset Behavior:**
+
+- Asserting the synchronous reset signal `rst` (active high) should initialize the circuit. **During reset assertion (`rst=1`), the output `dout` must be forced to `0`.**
+- **Upon the release of the reset signal, the output sequence must commence with a low level on the very first clock cycle.** In other words, the initial state after reset release, for the first clock cycle, should be a low level for `dout` (representing the start of an even-numbered cycle sequence).
+- The reset signal `rst` is synchronous to the clock signal `clk`, and its release must be synchronized with the clock edge.
+
+**Important Notes:**
+
+- The `rst` signal should not appear in the sensitivity list of any sequential logic elements (as synchronous reset is implemented through the data path).
+- The output `dout` should continue toggling between high and low levels on each clock cycle indefinitely, starting from the first clock cycle after reset release.
+
+**Module Interface:**
+
+module odd_change (
+    input wire clk,    // Clock input
+    input wire rst,    // Reset input (active high)
+    output wire dout   // Output signal (high on odd cycles, low on even cycles)
+);

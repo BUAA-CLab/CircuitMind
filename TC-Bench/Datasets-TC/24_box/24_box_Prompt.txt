@@ -1,0 +1,33 @@
+Design a circuit with four 8-bit registers that can perform read and write operations based on control signals and a 2-bit address. The circuit operations are synchronous to the positive edge of the clock signal (clk).
+
+**Functionality:**
+
+**Registers:** The circuit contains four 8-bit registers, addressable using a 2-bit input `address` (values: 00, 01, 10, 11).
+
+**Reset:** When the synchronous reset signal `rst` is high at the positive edge of `clk`, all four 8-bit registers are reset to **8'b00000000**.  In addition, the output `read_data` and the signal `read_active` are also synchronously reset to **8'b00000000** and **1'b0**, respectively.
+
+**Write Operation:** When the `write_enable` signal is high at the positive edge of `clk`, 8-bit data from the `write_data` input is written into the register selected by the 2-bit `address` input.
+
+**Read Operation:** When the `read_enable` signal is high at the positive edge of `clk`, the 8-bit value from the register selected by the 2-bit `address` input is output on `read_data`. Simultaneously, the `read_active` output signal becomes high (`1'b1`) and remains high as long as `read_enable` is high. When `read_enable` is low at the positive edge of `clk`, `read_active` becomes low (`1'b0`).
+
+**Simultaneous Read and Write (Write Priority):** If both `read_enable` and `write_enable` signals are high at the positive edge of `clk`, the **write operation takes priority** and is performed first.  This means the value provided at `write_data` will be written to the register selected by `address`. In the same clock cycle, the `read_data` output will reflect the value **after** the write operation has been completed (i.e., it will read the value that was just written).
+
+**Initial State on Power-Up:**  Upon power-up or at the start of simulation, the initial content of the four 8-bit registers, as well as the initial values of `read_data` and `read_active` outputs, are **undefined (or may be initialized to 'x' in simulation)** until the reset signal `rst` is asserted.
+
+**Notes:**
+
+*   Reset (`rst`) is a synchronous reset and is processed only at the positive edge of the clock (`clk`). The `rst` signal should **not** appear in the sensitivity list of any combinational logic.
+*   The `read_active` signal is a combinational output that directly reflects the state of the `read_enable` signal during read operations.
+
+**Module Interface:**
+
+module box (
+    input clk,
+    input rst,
+    input read_enable,
+    input write_enable,
+    input [7:0] write_data,
+    input [1:0] address,
+    output reg [7:0] read_data,
+    output reg read_active
+);

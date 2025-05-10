@@ -1,0 +1,10 @@
+Design a storage circuit with a delayed output mechanism. The circuit stores 8-bit data and supports write operations based on a `write_enable` signal. When the `write_enable` input is high, the circuit overwrites the currently stored data with the new data provided at the `data_in` input. The output `data_out` reflects the value *stored in the memory element*, with a one-clock-cycle delay after a new value is written to storage due to `write_enable` being high. If `write_enable` is low, `data_out` maintains its previous value (which is already delayed).
+
+**Module Interface:**
+
+module elegant_storage (
+    input clk,
+    input write_enable,       // Write enable signal
+    input [7:0] data_in,      // Data input for writing
+    output reg [7:0] data_out // Data output, always reflects stored value
+);

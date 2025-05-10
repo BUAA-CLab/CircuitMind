@@ -1,0 +1,8 @@
+Four 1-bit input signals a, b, c, and d. Produce a high output when an odd number of inputs are high.
+module odd_signal (
+    input wire a,    // First input
+    input wire b,    // Second input
+    input wire c,    // Third input
+    input wire d,    // Fourth input
+    output wire y    // Output signal (high for odd number of high inputs)
+);

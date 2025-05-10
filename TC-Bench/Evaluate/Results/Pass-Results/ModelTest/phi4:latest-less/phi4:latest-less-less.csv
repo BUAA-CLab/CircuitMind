@@ -1,0 +1,25 @@
+Subfolder,Child Folder,Longest delay (ns),Longest path,Total logic gates,Total delay,total
+1_not_gate,0,2.0,0 -> OUT,1,2,3.0
+2_second_tick,0,4.0,0 -> 1 -> OUT,2,4,6.0
+3_xor_gate,0,6.0,0 -> 3 -> 4 -> OUT,5,6,11.0
+4_or3_gate,0,4.0,0 -> 1 -> OUT,2,4,6.0
+5_and3_gate,10,4.0,0 -> 1 -> OUT,2,4,6.0
+6_xnor_gate,0,6.0,0 -> 3 -> 4 -> OUT,5,6,11.0
+7_double_trouble,10,8.0,3 -> 8 -> 9 -> 10 -> OUT,11,8,19.0
+10_half_adder,0,6.0,0 -> OUT,6,6,12.0
+11_full_adder,0,12.0,0 -> 1 -> OUT,13,12,25.0
+12_odd_change,17,4.0,4 -> 1 -> OUT,8,4,12.0
+13_inverter_1bit,1,6.0,0 -> OUT,5,6,11.0
+14_or_8bit,1,2.0,0 -> OUT,8,2,10.0
+15_not_8bit,0,2.0,2 -> OUT,8,2,10.0
+16_adder_8bit,10,12.0,4 -> 0 -> OUT,13,12,25.0
+17_mux_8bit,22,6.0,0 -> 11 -> 17 -> OUT,18,6,24.0
+18_opposite_number,19,2.0,6 -> OUT,15,2,17.0
+19_elegant_storage,0,4.0,0 -> 7 -> OUT,23,4,27.0
+20_store_byte,22,6.0,18 -> 31 -> 28 -> OUT,50,6,56.0
+21_decoder_1bit,1,2.0,0 -> OUT,1,2,3.0
+22_decoder_3bit,0,6.0,1 -> 14 -> 13 -> OUT,15,6,21.0
+23_logic_engine,11,8.0,9 -> 23 -> 27 -> 10 -> OUT,19,8,27.0
+25_counter,27,0.0,OUT,15,0,15.0
+27_instruction_decoder,0,4.0,0 -> 3 -> OUT,6,4,10.0
+28_conditional_checker,12,4.0,0 -> 1 -> OUT,2,4,6.0

@@ -1,0 +1,18 @@
+--------------------------------------------------
+Executing: python3 /home/haiyan/Research/CircuitMind-v2-Re/Evaluate/pass_ratio.py --input-csv /home/haiyan/Research/CircuitMind-v2-Re/Evaluate/SEI-Results/ModelTest/Phi4/Phi4-raw.csv --output-results-csv /home/haiyan/Research/CircuitMind-v2-Re/Evaluate/SEI-Results/PassRatio/Phi4_Pass_Results.csv --output-plot-pass1 /home/haiyan/Research/CircuitMind-v2-Re/Evaluate/SEI-Results/PassRatio/Phi4_pass1.png --output-plot-pass5 /home/haiyan/Research/CircuitMind-v2-Re/Evaluate/SEI-Results/PassRatio/Phi4_pass5.png --total-trials 20
+--------------------------------------------------
+Calculating pass ratio from: /home/haiyan/Research/CircuitMind-v2-Re/Evaluate/SEI-Results/ModelTest/Phi4/Phi4-raw.csv
+Assuming 20 total trials per challenge.
+Pass ratio results saved to: /home/haiyan/Research/CircuitMind-v2-Re/Evaluate/SEI-Results/PassRatio/Phi4_Pass_Results.csv
+PASS@1 plot saved to: /home/haiyan/Research/CircuitMind-v2-Re/Evaluate/SEI-Results/PassRatio/Phi4_pass1.png
+PASS@5 plot saved to: /home/haiyan/Research/CircuitMind-v2-Re/Evaluate/SEI-Results/PassRatio/Phi4_pass5.png
+
+--- Pass Ratio Summary ---
++------------+--------------+------------+--------+--------+
+| Challenge  | Total Trials | Successful | pass@1 | pass@5 |
++------------+--------------+------------+--------+--------+
+| 3_xor_gate |           20 |          2 | 0.1000 | 0.4474 |
++------------+--------------+------------+--------+--------+
+------------------------
+--------------------------------------------------
+

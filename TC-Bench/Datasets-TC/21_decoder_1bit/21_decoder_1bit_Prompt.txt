@@ -1,0 +1,6 @@
+Design a 1-bit decoder circuit that activates one of two outputs (out1 or out2) based on the value of a 1-bit input signal (in). The decoder ensures that exactly one output is high (1) at any given time.
+module decoder_1bit(
+    input wire in,
+    output wire out1,
+    output wire out2
+);

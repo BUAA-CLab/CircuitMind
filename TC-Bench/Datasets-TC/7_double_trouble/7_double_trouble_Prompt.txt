@@ -1,0 +1,8 @@
+Four 1-bit input signals, produce a high output if two or more of the inputs are high.
+module double_trouble (
+    input wire a,     
+    input wire b,     
+    input wire c,     
+    input wire d,     
+    output wire out   
+);

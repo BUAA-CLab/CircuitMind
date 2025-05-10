@@ -1,0 +1,7 @@
+Two 8-bit inputs A and B, and a 1-bit selection signal select. Output Y as A when select is low, and as B when select is high.
+module mux_8bit (
+    input wire [7:0] A,       // 8-bit input A
+    input wire [7:0] B,       // 8-bit input B
+    input wire select,        // Selection signal
+    output wire [7:0] Y       // 8-bit output
+);

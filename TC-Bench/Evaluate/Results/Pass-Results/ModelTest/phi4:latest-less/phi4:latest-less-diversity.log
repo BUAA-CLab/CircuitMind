@@ -1,0 +1,36 @@
+--------------------------------------------------
+Executing: python3 /home/qhy/Research/LLM/OpenSource/CircuitMind/TC-Bench/Evaluate/Verilog_Diversity_Test.py --input-dir /home/qhy/Research/LLM/OpenSource/CircuitMind/TC-Bench/Exp-Results/phi4:latest-less
+--------------------------------------------------
+Analyzing Verilog diversity in subfolders of: /home/qhy/Research/LLM/OpenSource/CircuitMind/TC-Bench/Exp-Results/phi4:latest-less
+
+Diversity Results:
++------------------------+---------------------------+
+| 子文件夹 (Challenge)   | 不同 Verilog 文件内容数量 |
++------------------------+---------------------------+
+| 1_not_gate             |                        19 |
+| 2_second_tick          |                        22 |
+| 3_xor_gate             |                        22 |
+| 4_or3_gate             |                        22 |
+| 5_and3_gate            |                        22 |
+| 6_xnor_gate            |                        22 |
+| 7_double_trouble       |                        19 |
+| 10_half_adder          |                        21 |
+| 11_full_adder          |                        20 |
+| 12_odd_change          |                        16 |
+| 13_inverter_1bit       |                        21 |
+| 14_or_8bit             |                        22 |
+| 15_not_8bit            |                        22 |
+| 16_adder_8bit          |                         8 |
+| 17_mux_8bit            |                        22 |
+| 18_opposite_number     |                        14 |
+| 19_elegant_storage     |                         5 |
+| 20_store_byte          |                         3 |
+| 21_decoder_1bit        |                        22 |
+| 22_decoder_3bit        |                        21 |
+| 23_logic_engine        |                        13 |
+| 25_counter             |                         6 |
+| 27_instruction_decoder |                        22 |
+| 28_conditional_checker |                         8 |
++------------------------+---------------------------+
+--------------------------------------------------
+

@@ -1,0 +1,6 @@
+Two 8-bit input signals a and b. Perform a bitwise OR operation and output the result as an 8-bit signal y.
+module or_8bit (
+    input wire [7:0] a,    // First 8-bit input
+    input wire [7:0] b,    // Second 8-bit input
+    output wire [7:0] y    // 8-bit OR result
+);

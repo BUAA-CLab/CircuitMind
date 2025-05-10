@@ -1,0 +1,22 @@
+# Yosys script template (compile.ys) - Placeholders ##...## will be replaced
+
+# Read the Verilog file specified by the calling script
+read_verilog ##VERILOG_FILE##
+
+# Set the top module specified by the calling script and perform hierarchy check
+hierarchy -check -top ##MODULE##
+
+# Standard optimization and mapping sequence (adjust if needed)
+check
+proc -noopt
+techmap         # Map processes to primitives
+opt_merge       # Merge compatible gates
+opt_expr        # Optimize expressions
+# opt_dff         # Optimize DFFs (if any) - Optional, depends on target
+opt_clean       # Clean up unused cells/wires
+clean           # Another cleaning pass
+# memory_map      # Map memories (if any) - Optional
+techmap         # Final tech mapping
+
+# Write the synthesized netlist to the SPICE file specified by the calling script
+write_spice ##SPICE_FILE##

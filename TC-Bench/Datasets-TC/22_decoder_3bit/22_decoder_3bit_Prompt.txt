@@ -1,0 +1,5 @@
+ A 3-bit input signal in is used to select one of eight output signals (out[7:0]). The selected output is set to high (1), and all others are low (0).
+ module decoder_3bit (
+    input wire [2:0] in,   // 3-bit input signal
+    output wire [7:0] out  // 8-bit output signal
+);

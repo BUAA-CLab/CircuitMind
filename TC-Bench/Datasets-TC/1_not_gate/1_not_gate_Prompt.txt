@@ -1,0 +1,5 @@
+A 1-bit input signal, generate its negation (not gate).
+module not_gate(
+    input wire in,
+    output wire out
+);

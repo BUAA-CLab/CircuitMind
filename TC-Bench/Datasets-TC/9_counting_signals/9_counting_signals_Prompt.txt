@@ -1,0 +1,8 @@
+Four 1-bit input signals a, b, c, and d. Output a 3-bit binary number count representing the number of high-level inputs.
+module counting_signals(
+    input wire a,
+    input wire b,
+    input wire c,
+    input wire d,
+    output [2:0]count 
+);

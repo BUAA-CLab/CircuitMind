@@ -1,0 +1,12 @@
+Design an 8-bit counter that supports two modes of operation using **synchronous reset**. The counter operates as follows:
+*   **Step Mode (mode = 0):** The counter increments by 1 at each clock tick.
+*   **Overwrite Mode (mode = 1):** The counter value is replaced with the 8-bit value provided at the `write_data` input at each clock tick.
+*   **Reset (rst):** The counter can be synchronously reset to 0 using the `rst` signal. The reset should be effective on the rising edge of the clock when `rst` is asserted.
+**Module Interface:**
+module counter (
+    input clk,              // Clock signal
+    input rst,              // Reset signal
+    input mode,             // Mode: 0 for step, 1 for overwrite
+    input [7:0] write_data, // 8-bit data to write
+    output [7:0] count      // 8-bit counter output
+);

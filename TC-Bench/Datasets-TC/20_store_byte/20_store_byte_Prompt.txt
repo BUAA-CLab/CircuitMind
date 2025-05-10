@@ -1,0 +1,12 @@
+Design a circuit to store and read a single byte of data. The circuit supports both reading and writing operations based on control signals. It outputs data when reading is enabled, and the output is only enabled when the read operation is active and the `data_out` is valid. When `rst` is high, the stored data and output should be reset to 0.
+Note: Reset signals must be processed in a clock-synchronized manner. The rst signal should not appear in the sensitivity list.
+**Module Interface:**
+module store_byte ( 
+    input clk,              // Clock signal 
+    input rst,              // Reset signal
+    input read_enable,      // Read enable signal 
+    input write_enable,     // Write enable signal 
+    input [7:0] data_in,    // Data input for writing 
+    output [7:0] data_out, // Data output for reading 
+    output output_enable  // Output enable signal 
+);

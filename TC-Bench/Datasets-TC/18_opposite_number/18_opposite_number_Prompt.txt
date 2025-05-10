@@ -1,0 +1,5 @@
+An 8-bit signed input in. Compute its negation and output the result as out.
+module opposite_number(
+    input wire [7:0] in,
+    output [7:0] out
+);

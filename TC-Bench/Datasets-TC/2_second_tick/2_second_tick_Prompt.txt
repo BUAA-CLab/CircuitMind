@@ -1,0 +1,6 @@
+Design a 1-bit output circuit based on two 1-bit inputs a and b. The output should be high (1) only when a is high and b is low. In all other cases, the output should be low (0).
+module second_tick(
+    input wire a,
+    input wire b,
+    output wire out
+);
