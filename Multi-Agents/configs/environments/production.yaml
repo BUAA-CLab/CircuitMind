@@ -1,0 +1,4 @@
+debug: false
+logging:
+  console_enabled: false
+  level: INFO

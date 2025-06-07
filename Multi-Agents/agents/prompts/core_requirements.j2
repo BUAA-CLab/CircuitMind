@@ -1,0 +1,38 @@
+{# agents/prompts/core_requirements.j2 #}
+**--- CORE STRUCTURAL VERILOG REQUIREMENTS & ABSOLUTE PROHIBITIONS ---**
+
+**[CORE-1] Synchronous Design Principle**  
+- All asynchronous signals must be synchronized via 2-stage DFFs.  
+- Anti-pattern:  
+  ```verilog
+  d_flip_flop ff (.d(async_signal), ...)  // Unsynchronized async signal
+  ```
+
+**[CORE-2] Increment Logic Specification**  
+- Addition must use gate-level full adder structure.  
+- XOR bit-flip pseudo-increment is prohibited.  
+- Anti-pattern:  
+  ```verilog
+  xor (inc[0], count[0], 1'b1)  //  Bit inversion instead of +1
+  ```
+
+**[CORE-3] Multi-Driver Prevention**  
+- Single wire cannot be driven by multiple logic gates.  
+- Must use intermediate nets for logic merging.  
+- Anti-pattern:  
+  ```verilog
+  and (out, a, b);
+  or  (out, c, d)  //  Multiple drivers
+  ```
+
+**[CORE-4] Mode Selection Safety**  
+- Independent logic channels required for each mode path.  
+- Use AND-OR structure to prevent bus contention.
+
+**[CORE-5] Output Buffer Rules**  
+- Tri-state buffers MUST be instantiated individually per bit
+- Array-style buffer instantiation is STRICTLY PROHIBITED
+- Example of VIOLATION:
+```verilog
+bufif1 out_buf[7:0] (data_out, stored_data, read_enable);  // 
+```

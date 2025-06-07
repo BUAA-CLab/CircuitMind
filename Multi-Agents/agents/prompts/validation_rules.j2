@@ -1,0 +1,45 @@
+{# agents/prompts/validation_rules.j2 #}
+**--- Dynamic Validation Rules ---**
+
+**1. Timing Constraints**
+- **Setup/Hold Checks**:  
+  Verify combinational logic delay meets timing requirements.
+  There are some problems in the number of clock beats between the simulation results and the correct results, so the number of triggers should be considered.
+- **Clock Gating**:  
+  Ensure no unintended clock gating or glitches.
+
+**2. Structural Compliance Checks**
+- **Output Reg Validation**:  
+  Ensure `output reg` is only driven by `d_flip_flop` q output.
+- **Gate-Level Primitives**:  
+  Verify only allowed gates (`and`, `or`, `not`, `xor`, etc.) are used.
+- **Clock Domain Crossing**:  
+  Check all async signals pass through 2-stage synchronizer.
+
+**3. Functional Correctness Rules**
+- **Reset Behavior**:  
+  Confirm reset synchronously initializes all state elements. Ensure that asynchronous reset signals pass through a two-stage synchronizer.
+- **Increment Logic**:  
+  Validate proper carry propagation in adder chains.
+- **Mode Switching**:  
+  Ensure no glitches during mode transitions.
+
+**4. Data Retention and Feedback Path**
+- **Feedback Path Verification**:  
+  Ensure that each data bit retains its value when `write_enable` is low. This is done using a feedback loop that includes:
+  - **`and`** gate to select new data when `write_enable` is high.
+  - **`or`** gate to merge the feedback signal when `write_enable` is low, ensuring the previous state is retained.
+  - **`not`** gate to invert the `write_enable` signal for proper data selection.
+  - ** Strictly check for cyclic dependencies.
+
+**5. Output Isolation (Tri-state Output Handling)**
+- **Tri-state and Output Enable**:  
+  Ensure that when `read_enable` is low, the output enters **high-impedance (z)** state. This prevents inadvertent data driving when reading is not enabled.  
+  - **`bufif1`** should be used to drive the output when `read_enable` is high and isolate it when `read_enable` is low.
+**6. Reset Synchronization**
+- **Synchronized Reset Check**:  
+  Verify that all asynchronous reset signals are passed through two **d_flip_flop** stages for proper synchronization.  
+  The reset signal must **not directly drive** any logic without passing through the two-stage synchronizer. The correct synchronizer structure should look like:
+  ```
+  [DFF1] --> [DFF2] --> sync_rst
+  ```

@@ -1,0 +1,130 @@
+{# agents/prompts/detailed_rules_reference.j2 #}
+**--- DETAILED RULES & EXAMPLES (Reference) ---**
+**1. Core Design Principles**  
+- **Data Retention**: Storage elements must retain their current value when not written, requiring explicit feedback logic.  
+- **Signal Synchronization**: All asynchronous control signals must go through a 2-stage flip-flop synchronization.  
+- **Output Isolation**: Disabled outputs must show a high-impedance (z) state.  
+
+**2. Strictly Prohibited Constructs and Patterns**  
+**A. Illegal Statements and Structures (Incorrect Examples)**:  
+```verilog  
+// Incorrect ways to drive `output reg`  
+always @(posedge clk) data_out <= signal;    // Prohibited: Using `always` to drive `output reg`  
+assign data_out = logic;                     // Prohibited: Using `assign` to drive `output reg`  
+// Behavioral statements  
+if (condition) ...                          // Prohibited: Behavioral `if`, `case`, `for`, etc.  
+assign next = wr_en ? data : feedback;      // Prohibited: Using `?:` operator  
+// Combinatorial loops  
+d_flip_flop (.d(q), .q(q));                 // Prohibited: Direct feedback in D flip-flop  
+// Incorrect async handling  
+assign synced = async_signal;               // Prohibited: Unsynchronized cross-clock-domain signal  
+// Non-tri-state output  
+and (data_out, q, en);                      // Prohibited: Outputs 0 when disabled, not high-impedance  
+```  
+**B. Absolute Prohibitions**:  
+- **`output reg` Driving**:  
+  - Prohibited: Driving `output reg` through `always` or `assign`.  
+  - Prohibited: Indirect connection via intermediate wires (e.g., `wire tmp; assign output_reg = tmp;`).  
+- **Behavioral Operators**: Prohibited: `+`, `-`, `*`, `/`, `%`, `? :`, etc.  
+- **Procedural Blocks**: Prohibited: All `always` and `initial` blocks.  
+- **Signal Synchronization**: Prohibited: Using asynchronous signals without 2-stage synchronization.  
+
+**3. Allowed Structures and Mandatory Practices**  
+**A. Correct Syntax Examples**:  
+```verilog  
+// Synchronizer implementation  
+d_flip_flop sync_ff1 (.d(async_ctrl), .q(stage1));  
+d_flip_flop sync_ff2 (.d(stage1), .q(synced_ctrl));  
+// Data retention feedback (gate-level implementation)  
+wire sel, new_data, feedback, next;  
+and (gate1, new_data, wr_en);               // Gate-level selection logic  
+not (inv_wr, wr_en);  
+and (gate2, feedback, inv_wr);  
+or (next, gate1, gate2);  
+// Tri-state output  
+bufif1 out_buf[WIDTH-1:0] (data_out, current, oe);  // High-impedance when oe=0  
+output wire [WIDTH-1:0] data_out;           // Must be declared as wire  
+// D flip-flop driving `output reg`  
+d_flip_flop dff (.clk(clk), .q(data_out));  
+output reg data_out;                        // Direct connection from q to output reg  
+```  
+**B. Allowed Structures**:  
+- **Gate-Level Primitives**: `and`, `or`, `not`, `xor`, `xnor`, `nand`, `nor`.  
+- **`assign` Statements**: Only for connecting wires or module/gate outputs (prohibited for logic operations).  
+- **`generate` Blocks**: Only for structural instance replication.  
+- **Module Instantiation**: Only `d_flip_flop` and built-in gate-level modules are allowed.  
+
+**4. Detailed Rules**  
+- **Port Mapping**: All instantiations must use named port mapping (e.g., `.d(input)`).  
+- **Signal Types**:  
+  - `output reg` must be directly connected to the `q` output of `d_flip_flop`. No other driving sources are allowed.  
+  - Tri-state outputs must be declared as `output wire` and use primitives like `bufif1`.  
+- **Synchronous Design**:  
+  - Asynchronous signals must pass through two `d_flip_flop` stages for synchronization.  
+  - Synchronizer instances must have clear naming (e.g., `sync_ff1`, `sync_ff2`).  
+
+**5. Icarus Verilog Specific Requirements**  
+- **`output reg` Connection**:  
+  ```verilog  
+  // Incorrect: Indirect connection via wire  
+  wire dff_q;  
+  d_flip_flop dff (.q(dff_q));  
+  assign output_reg = dff_q;  
+  output reg output_reg;  
+  // Correct: Direct port connection  
+  d_flip_flop dff (.q(output_reg));  
+  output reg output_reg;  
+  ```  
+- **Tri-State Workaround**: If `bufif1` is not supported, use conditional assignment:  
+  ```verilog  
+  assign data_out = oe ? current : {WIDTH{1'bz}};  // Only allowed on wires  
+  ```  
+
+**6. Sequential Logic Validation**:  
+- Verify feedback loop contains at least:  
+  - 1 NOT gate (write_enable inversion)  
+  - 2 AND gates (new data & feedback paths)  
+  - 1 OR gate (input selection)  
+- Prohibited Pattern:  
+```verilog  
+// Error: Directly connecting control signal to DFF  
+and(write_data, write_enable, data_in);  
+d_flip_flop dff(.d(write_data), ...); // Missing feedback path  
+```  
+
+**7. Reset Validation**:  
+- Required Synchronizer Structure:  
+```
+        Async Reset  
+           |  
+           v  
+[DFF1] --> [DFF2] --> sync_rst  
+```  
+- Must see two cascaded DFFs for reset synchronization  
+
+**8. Auxiliary Prompt()**: 
+**A. There are some problems in the number of clock beats between the simulation results and the correct results, so the number of triggers should be considered.**
+	```
+	[DFF1] --> [DFF2]
+	``` 
+**B. To use D triggers in a program, you must use `d_flip_flop`. No other triggers can be used
+
+**--- GATE-LEVEL VALIDATION CRITERIA ---**  
+**Reset Synchronizer Validation**:  
+```verilog  
+// Correct  
+d_flip_flop sync_ff1 (.clk(clk), .rst(1'b0), .d(rst), .q(stage1));  
+// Error  
+d_flip_flop sync_ff1 (.clk(clk), .rst(rst), .d(rst), .q(stage1)); // Error: Sync chain uses external reset  
+```  
+**Data Retention Validation**:  
+```verilog  
+// Required feedback path  
+wire we_n, new_bit, feedback;  
+not (we_n, write_enable);  
+and (new_bit, write_enable, data_in[i]);  
+and (feedback, we_n, stored_data[i]); // Must use current stored value  
+or (d_input, new_bit, feedback);  
+// Error  
+or (d_input, write_enable ? data_in[i] : stored_data[i]); // Error: Using ternary operator  
+```

@@ -1,0 +1,14 @@
+{# agents/prompts/output_format.j2 #}
+**Output Format:**
+{% if output_json_format %}
+**JSON Output Format:**
+```json
+{ "error_code": "Error code", "feedback": "Detailed feedback", "needs_revision": true, "suggestion": "Fix suggestion" }
+```
+{% else %}
+**Plain text Verilog code output. NO JSON or explanations.**
+The verilog code must be complete and correct, ready for execution and testing.
+   {% if previous_execution_result %}
+     **Based on previous execution results, provide the complete, corrected code. If tests failed, analyze logs and correct the logic.**
+    {% endif %}
+{% endif %}

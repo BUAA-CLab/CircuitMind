@@ -1,0 +1,15 @@
+openai
+colorama
+jinja2
+numpy
+pandas
+scikit-learn
+scipy
+matplotlib
+requests
+tqdm
+prettytable
+pyyaml
+transitions
+faiss-cpu
+ollama

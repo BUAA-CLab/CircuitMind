@@ -1,0 +1,73 @@
+[
+    {
+      "design_type": "combinational",
+      "module_name": "and3_gate",
+      "design_requirements": "Three 1-bit input signals a, b, and c, produce their AND result.\nmodule and3_gate(\n    input wire a,\n    input wire b,\n    input wire c,\n    output wire y\n);",
+      "solution_pattern": "// Module definition with input/output ports\nmodule and3_gate(\n    input wire a, // First bit of data\n    input wire b, // Second bit of data\n    input wire c, // Third bit of data\n    output wire y  // AND result\n);\n\n// Instantiate an AND gate that takes three inputs and produces one output\nand (y, a, b, c);\n\nendmodule",
+      "is_successful": true,
+      "design_features": [],
+      "tags": ["AND", "gate", "input", "output"]
+    },
+	{
+	  "design_type": "combinational",
+	  "module_name": "not_gate",
+	  "design_requirements": "A 1-bit input signal, generate its negation (not gate).\nmodule not_gate (\n    input wire in,\n    output wire out\n);",
+	  "solution_pattern": "module not_gate (\n    input wire in,\n    output wire out\n);\n    not g1 (out, in);\nendmodule",
+	  "is_successful": true,
+	  "design_features": [
+		"Implements a NOT gate using a single NOT primitive"
+	  ],
+	  "tags": ["NOT", "gate", "input", "output", "combinational"]
+	},
+	{
+	  "design_type": "combinational",
+	  "module_name": "xor_gate",
+	  "design_requirements": "Two 1-bit input signals a and b, produce their XOR result.\nmodule xor_gate(\n    input wire a,\n    input wire b,\n    output wire y\n);",
+	  "solution_pattern": "module xor_gate(\n    input wire a,\n    input wire b,\n    output wire y\n);\n    wire or_a_b;\n    wire nand_a_b;\n    or g1 (or_a_b, a, b);\n    nand g2 (nand_a_b, a, b);\n    and g3 (y, or_a_b, nand_a_b);\nendmodule",
+	  "is_successful": true,
+	  "design_features": [
+		"Implements XOR using OR, NAND, and AND gates"
+	  ],
+	  "tags": ["XOR", "gate", "input", "output", "combinational"]
+	},
+	{
+	  "design_type": "combinational",
+	  "module_name": "xnor_gate",
+	  "design_requirements": "Two 1-bit input signals a and b, produce their XNOR result.\nmodule xnor_gate(\n    input wire a,\n    input wire b,\n    output wire y\n);",
+	  "solution_pattern": "module xnor_gate(\n    input wire a,\n    input wire b,\n    output wire y\n);\n    wire and_a_b;\n    wire nor_a_b;\n    and g1 (and_a_b, a, b);\n    nor g2 (nor_a_b, a, b);\n    or g3 (y, and_a_b, nor_a_b);\nendmodule",
+	  "is_successful": true,
+	  "design_features": [
+		"Implements XNOR using AND, NOR, and OR gates"
+	  ],
+	  "tags": ["XNOR", "gate", "input", "output", "combinational"]
+	},
+	{
+	  "design_type": "combinational",
+	  "module_name": "or3_gate",
+	  "design_requirements": "Three 1-bit input signals a, b, and c, produce their OR result.\nmodule or3_gate(\n    input wire a,\n    input wire b,\n    input wire c,\n    output wire y\n);",
+	  "solution_pattern": "module or3_gate(\n    input wire a,\n    input wire b,\n    input wire c,\n    output wire y\n);\n    or g1 (y, a, b, c);\nendmodule",
+	  "is_successful": true,
+	  "design_features": [
+		"Implements a three-input OR gate using a single OR primitive"
+	  ],
+	  "tags": ["OR", "gate", "input", "output", "combinational"]
+	},
+    {
+      "design_type": "sequential",
+      "module_name": "d_flip_flop",
+      "design_requirements": "Design a simple D flip-flop with synchronous reset",
+      "solution_pattern": "module d_flip_flop (\n    input wire clk,\n    input wire rst,\n    input wire d,\n    output reg q\n);\n\nalways @(posedge clk) begin\n    if (rst)\n        q <= 1'b0;\n    else\n        q <= d;\nend\n\nendmodule",
+      "is_successful": true,
+      "design_features": ["synchronous_reset"],
+      "tags": ["flip_flop", "sequential", "register"]
+    },
+    {
+      "design_type": "sequential",
+      "module_name": "store_byte",
+      "design_requirements": "Design a circuit to store and read a single byte of data. The circuit supports both reading and writing operations based on control signals.",
+      "solution_pattern": "module store_byte (\n    input wire clk,\n    input wire rst,\n    input wire read_enable,\n    input wire write_enable,\n    input wire [7:0] data_in,\n    output reg [7:0] data_out,\n    output wire output_enable\n);\n\n    // Internal storage\n    reg [7:0] stored_data;\n    \n    // Control logic\n    assign output_enable = read_enable;\n    \n    // Memory logic\n    always @(posedge clk) begin\n        if (rst) begin\n            stored_data <= 8'b0;\n            data_out <= 8'b0;\n        end\n        else begin\n            // Write operation\n            if (write_enable) begin\n                stored_data <= data_in;\n            end\n            \n            // Read operation\n            if (read_enable) begin\n                data_out <= stored_data;\n            end\n        end\n    end\n\nendmodule",
+      "is_successful": true,
+      "design_features": ["register", "control_signals"],
+      "tags": ["memory", "register", "byte", "storage"]
+    }
+  ]

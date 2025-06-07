@@ -1,0 +1,464 @@
+[
+  {
+    "error_id": "synth_port_naming_001",
+    "stage": "synthesis",
+    "language": "verilog",
+    "error_type": "Syntax Error",
+    "description": "Incorrect syntax for gate instantiation. Primitive gate instantiations in Verilog do not support named port connections.",
+    "error_message_patterns": [
+      "Gates do not have port names."
+    ],
+    "potential_causes": [
+      "Using named port connections (e.g., `.Y(out)`) when instantiating primitive gates like `and`, `or`, `not`, `buf`, `nand`, `nor`, `xor`, `xnor`.",
+      "Mistakenly applying module instantiation syntax to primitive gate instantiation."
+    ],
+    "solutions": [
+      "For primitive gate instantiation, use ordered port connections where the signal order matches the gate's input/output order.",
+      "Refer to the Verilog language specification for the correct syntax of primitive gate instantiation.",
+      "Ensure that the order of signals in the instantiation matches the standard definition of the gate (e.g., `output, input1, input2` for a two-input AND gate).",
+      "If named connections are desired, consider creating a module that encapsulates the gate and using module instantiation instead."
+    ],
+    "code_example_with_error": "module second_tick (\n    input wire a,\n    input wire b,\n    output wire out\n);\n\n    // Declare internal wire for the inverted value of b\n    wire b_not;\n\n    // Instantiate a NOT gate to invert the input b\n    not not_b (\n        .Y(b_not),\n        .A(b)\n    );\n\n    // Instantiate an AND gate to combine input a and the inverted b\n    and and_ab_not (\n        .Y(out),\n        .A(a),\n        .B(b_not)\n    );\n\nendmodule",
+    "code_example_fixed": "module second_tick (\n    input wire a,\n    input wire b,\n    output wire out\n);\n\n    // Declare internal wire for the inverted value of b\n    wire b_not;\n\n    // Instantiate a NOT gate to invert the input b\n    not not_b (\n        b_not, // Output port\n        b      // Input port\n    );\n\n    // Instantiate an AND gate to combine input a and the inverted b\n    and and_ab_not (\n        out,   // Output port\n        a,     // Input port 1\n        b_not  // Input port 2\n    );\n\nendmodule",
+    "keywords": ["verilog", "synthesis error", "gate instantiation", "primitive gate", "port names", "syntax error"],
+    "severity": "critical"
+  },
+  {
+    "error_id": "synth_identifier_syntax_001",
+    "stage": "synthesis",
+    "language": "verilog",
+    "error_type": "Syntax Error",
+    "description": "Invalid syntax for identifiers (module instance names, wire names). Identifiers in Verilog cannot contain spaces.",
+    "error_message_patterns": [
+      "syntax error",
+      "Invalid module item.",
+      "Syntax error in instance port expression(s)."
+    ],
+    "potential_causes": [
+      "Including spaces within module instance names (e.g., `g_ab_ncn d`).",
+      "Including spaces within wire names (e.g., `w_ab_ncn d`).",
+      "The parser misinterpreting tokens due to spaces in identifiers, leading to secondary errors in port expressions."
+    ],
+    "solutions": [
+      "Remove all spaces from module instance names. Choose a valid identifier naming convention (e.g., using underscores or camelCase).",
+      "Remove all spaces from wire names. Ensure all signals have valid Verilog identifier names.",
+      "Carefully review the error messages and the corresponding lines of code to identify instances or wires with spaces in their names.",
+      "Ensure that all identifiers adhere to Verilog naming rules (start with a letter or underscore, followed by letters, numbers, underscores, or dollar signs)."
+    ],
+    "code_example_with_error": "module counting_signals (\n    input wire a,\n    input wire b,\n    input wire c,\n    input wire d,\n    output [2:0] count\n);\n    wire w_xor_ab, w_xor_abc;\n    xor g_xor_ab (w_xor_ab, a, b);\n    xor g_xor_abc (w_xor_abc, w_xor_ab, c);\n    xor g_count0 (count[0], w_xor_abc, d); // count[0] = a ^ b ^ c ^ d\n\n    // count[2] = a & b & c & d\n    wire w_and_ab, w_and_abc;\n    and g_and_ab (w_and_ab, a, b);\n    and g_and_abc (w_and_abc, w_and_ab, c);\n    and g_count2 (count[2], w_and_abc, d);\n\n    // count[1] - exactly two ones\n    wire w_ab_ncn d, w_ac_nbnd, w_ad_nbnc, w_bc_nand, w_bd_nanc, w_cd_nanb;\n    // wire w_ab_ncn_d, w_ac_nbnd, w_ad_nbnc, w_bc_nand, w_bd_nanc, w_cd_nanb;\n    not g_na (na, a);\n    not g_nb (nb, b);\n    not g_nc (nc, c);\n    not g_nd (nd, d);\n    and g_ab_ncn d (w_ab_ncn d, a, b, nc, nd);\n    and g_ac_nbnd (w_ac_nbnd, a, nb, c, nd);\n    and g_ad_nbnc (w_ad_nbnc, a, nb, nc, d);\n    and g_bc_nand (w_bc_nand, na, b, c, nd);\n    and g_bd_nanc (w_bd_nanc, na, b, nc, d);\n    and g_cd_nanb (w_cd_nanb, na, nb, c, d);\n    wire w_two_ones;\n    or g_two_ones (w_two_ones, w_ab_ncn d, w_ac_nbnd, w_ad_nbnc, w_bc_nand, w_bd_nanc, w_cd_nanb);\n\n    // count[1] - exactly three ones\n    wire w_abc_nd, w_abd_nc, w_acd_nb, w_bcd_na;\n    and g_abc_nd (w_abc_nd, a, b, c, nd);\n    and g_abd_nc (w_abd_nc, a, b, nc, d);\n    and g_acd_nb (w_acd_nb, a, nb, c, d);\n    and g_bcd_na (w_bcd_na, na, b, c, d);\n    wire w_three_ones;\n    or g_three_ones (w_three_ones, w_abc_nd, w_abd_nc, w_acd_nb, w_bcd_na);\n\n    // count[1] - final\n    or g_count1 (count[1], w_two_ones, w_three_ones);\n\nendmodule",
+    "code_example_fixed": "module counting_signals (\n    input wire a,\n    input wire b,\n    input wire c,\n    input wire d,\n    output [2:0] count\n);\n    wire w_xor_ab, w_xor_abc;\n    xor g_xor_ab (w_xor_ab, a, b);\n    xor g_xor_abc (w_xor_abc, w_xor_ab, c);\n    xor g_count0 (count[0], w_xor_abc, d); // count[0] = a ^ b ^ c ^ d\n\n    // count[2] = a & b & c & d\n    wire w_and_ab, w_and_abc;\n    and g_and_ab (w_and_ab, a, b);\n    and g_and_abc (w_and_abc, w_and_ab, c);\n    and g_count2 (count[2], w_and_abc, d);\n\n    // count[1] - exactly two ones\n    wire w_ab_ncn_d, w_ac_nbnd, w_ad_nbnc, w_bc_nand, w_bd_nanc, w_cd_nanb;\n    not g_na (na, a);\n    not g_nb (nb, b);\n    not g_nc (nc, c);\n    not g_nd (nd, d);\n    and g_ab_ncn_d (w_ab_ncn_d, a, b, nc, nd);\n    and g_ac_nbnd (w_ac_nbnd, a, nb, c, nd);\n    and g_ad_nbnc (w_ad_nbnc, a, nb, nc, d);\n    and g_bc_nand (w_bc_nand, na, b, c, nd);\n    and g_bd_nanc (w_bd_nanc, na, b, nc, d);\n    and g_cd_nanb (w_cd_nanb, na, nb, c, d);\n    wire w_two_ones;\n    or g_two_ones (w_two_ones, w_ab_ncn_d, w_ac_nbnd, w_ad_nbnc, w_bc_nand, w_bd_nanc, w_cd_nanb);\n\n    // count[1] - exactly three ones\n    wire w_abc_nd, w_abd_nc, w_acd_nb, w_bcd_na;\n    and g_abc_nd (w_abc_nd, a, b, c, nd);\n    and g_abd_nc (w_abd_nc, a, b, nc, d);\n    and g_acd_nb (w_acd_nb, a, nb, c, d);\n    and g_bcd_na (w_bcd_na, na, b, c, d);\n    wire w_three_ones;\n    or g_three_ones (w_three_ones, w_abc_nd, w_abd_nc, w_acd_nb, w_bcd_na);\n\n    // count[1] - final\n    or g_count1 (count[1], w_two_ones, w_three_ones);\n\nendmodule",
+    "keywords": ["verilog", "synthesis error", "identifier", "naming convention", "syntax error", "instance name", "wire name", "spaces in identifier"],
+    "severity": "critical"
+  },
+  {
+    "error_id": "synth_module_scope_001",
+    "stage": "synthesis",
+    "language": "verilog",
+    "error_type": "Syntax Error",
+    "description": "Top-level declarations are not allowed outside of module, interface, or program blocks.",
+    "error_message_patterns": [
+      "syntax error"
+    ],
+    "potential_causes": [
+      "Declaring signals (wires, regs, etc.) or instantiating modules outside of a defined module, interface, or program.",
+      "Missing `module`, `interface`, or `program` keyword at the beginning of the design file.",
+      "Incorrectly placed declarations, such as at the top of the file without being enclosed in a design unit.",
+      "Pasting code snippets that are intended to be inside a module but are being interpreted as top-level code."
+    ],
+    "solutions": [
+      "Ensure all declarations and instantiations are within a `module`, `interface`, or `program` block.",
+      "Verify that the `module` keyword and module name are present at the beginning of your Verilog design file.",
+      "Check for any stray declarations that might be outside the intended scope.",
+      "If you are working with code snippets, make sure they are placed correctly within the context of a larger module definition.",
+      "Every Verilog design must have at least one top-level module."
+    ],
+    "code_example_with_error": "wire w_xor1, w_xor2;\nxor g_xor1 (w_xor1, a, b);\nxor g_xor2 (w_xor2, c, d);\nxor g_count0 (count[0], w_xor1, w_xor2);\n\n\nand g_count2 (count[2], a, b, c, d);\n\n\n  wire w_ab, w_ac, w_ad, w_bc, w_bd, w_cd;\n  and g_ab (w_ab, a, b);\n  and g_ac (w_ac, a, c);\n  and g_ad (w_ad, a, d);\n  and g_bc (w_bc, b, c);\n  and g_bd (w_bd, b, d);\n  and g_cd (w_cd, c, d);\n  wire w_two_ones;\n  or g_two_ones (w_two_ones, w_ab, w_ac, w_ad, w_bc, w_bd, w_cd);\n\n\n  wire w_abc, w_abd, w_acd, w_bcd;\n  and g_abc (w_abc, a, b, c);\n  and g_abd (w_abd, a, b, d);\n  and g_acd (w_acd, a, c, d);\n  and g_bcd (w_bcd, b, c, d);\n  wire w_three_ones;\n  or g_three_ones (w_three_ones, w_abc, w_abd, w_acd, w_bcd);\n\n\n  or g_count1 (count[1], w_two_ones, w_three_ones);",
+    "code_example_fixed": "module counting_signals (\n    input wire a,\n    input wire b,\n    input wire c,\n    input wire d,\n    output reg [2:0] count\n);\n  wire w_xor1, w_xor2;\n  xor g_xor1 (w_xor1, a, b);\n  xor g_xor2 (w_xor2, c, d);\n  xor g_count0 (count[0], w_xor1, w_xor2);\n\n\n  and g_count2 (count[2], a, b, c, d);\n\n\n  wire w_ab, w_ac, w_ad, w_bc, w_bd, w_cd;\n  and g_ab (w_ab, a, b);\n  and g_ac (w_ac, a, c);\n  and g_ad (w_ad, a, d);\n  and g_bc (w_bc, b, c);\n  and g_bd (w_bd, b, d);\n  and g_cd (w_cd, c, d);\n  wire w_two_ones;\n  or g_two_ones (w_two_ones, w_ab, w_ac, w_ad, w_bc, w_bd, w_cd);\n\n\n  wire w_abc, w_abd, w_acd, w_bcd;\n  and g_abc (w_abc, a, b, c);\n  and g_abd (w_abd, a, b, d);\n  and g_acd (w_acd, a, c, d);\n  and g_bcd (w_bcd, b, c, d);\n  wire w_three_ones;\n  or g_three_ones (w_three_ones, w_abc, w_abd, w_acd, w_bcd);\n\n\n  or g_count1 (count[1], w_two_ones, w_three_ones);\n\nendmodule",
+    "keywords": ["verilog", "synthesis error", "syntax error", "module", "interface", "program", "top-level declaration", "scope"],
+    "severity": "critical"
+  },
+  {
+    "error_id": "synth_nested_module_001",
+    "stage": "synthesis",
+    "language": "verilog",
+    "error_type": "Syntax Error",
+    "description": "Module definitions cannot be nested within other modules in Verilog.",
+    "error_message_patterns": [
+      "Module definition (.+) cannot nest into module (.+)."
+    ],
+    "potential_causes": [
+      "Defining a module inside another module's definition.",
+      "Intending to instantiate a module but accidentally using the `module` keyword to define it within the current module.",
+      "Structuring the Verilog code with incorrect module hierarchy."
+    ],
+    "solutions": [
+      "Move the nested module definition outside of the parent module's `endmodule` statement.",
+      "Ensure that each module definition is a separate, top-level entity.",
+      "If the intention was to instantiate the inner module, use the module name as a type and provide an instance name.",
+      "Review the module hierarchy and ensure it aligns with the design requirements."
+    ],
+    "code_example_with_error": "module adder_8bit (\n    input        clk,\n    input        rst,\n    input  [7:0] a,          // 8-bit input A\n    input  [7:0] b,          // 8-bit input B\n    input        carry_in,   // Input carry\n    output [7:0] sum,        // 8-bit sum output\n    output       carry_out   // Carry-out signal\n);\n    wire [7:0] internal_sum;\n    wire [7:0] internal_carry;\n\n    // Implementation of a 1-bit Full Adder\n    module full_adder (input a, input b, input cin, output s, output cout);\n        wire xor_ab, and_ab, and_cin_xor_ab;\n        xor g1 (xor_ab, a, b);\n        and g2 (and_ab, a, b);\n        and g3 (and_cin_xor_ab, cin, xor_ab);\n        xor g4 (s, xor_ab, cin);\n        or  g5 (cout, and_ab, and_cin_xor_ab);\n    endmodule\n\n    // Instantiate 8 Full Adders\n    full_adder fa0 (\n        .a(a[0]),\n        .b(b[0]),\n        .cin(carry_in),\n        .s(internal_sum[0]),\n        .cout(internal_carry[0])\n    );\n\n    full_adder fa1 (\n        .a(a[1]),\n        .b(b[1]),\n        .cin(internal_carry[0]),\n        .s(internal_sum[1]),\n        .cout(internal_carry[1])\n    );\n\n    full_adder fa2 (\n        .a(a[2]),\n        .b(b[2]),\n        .cin(internal_carry[1]),\n        .s(internal_sum[2]),\n        .cout(internal_carry[2])\n    );\n\n    full_adder fa3 (\n        .a(a[3]),\n        .b(b[3]),\n        .cin(internal_carry[2]),\n        .s(internal_sum[3]),\n        .cout(internal_carry[3])\n    );\n\n    full_adder fa4 (\n        .a(a[4]),\n        .b(b[4]),\n        .cin(internal_carry[3]),\n        .s(internal_sum[4]),\n        .cout(internal_carry[4])\n    );\n\n    full_adder fa5 (\n        .a(a[5]),\n        .b(b[5]),\n        .cin(internal_carry[4]),\n        .s(internal_sum[5]),\n        .cout(internal_carry[5])\n    );\n\n    full_adder fa6 (\n        .a(a[6]),\n        .b(b[6]),\n        .cin(internal_carry[5]),\n        .s(internal_sum[6]),\n        .cout(internal_carry[6])\n    );\n\n    full_adder fa7 (\n        .a(a[7]),\n        .b(b[7]),\n        .cin(internal_carry[6]),\n        .s(internal_sum[7]),\n        .cout(carry_out)\n    );\n\n    assign sum = internal_sum;\n\nendmodule",
+    "code_example_fixed": "module full_adder (input a, input b, input cin, output s, output cout);\n    wire xor_ab, and_ab, and_cin_xor_ab;\n    xor g1 (xor_ab, a, b);\n    and g2 (and_ab, a, b);\n    and g3 (and_cin_xor_ab, cin, xor_ab);\n    xor g4 (s, xor_ab, cin);\n    or  g5 (cout, and_ab, and_cin_xor_ab);\nendmodule\n\nmodule adder_8bit (\n    input        clk,\n    input        rst,\n    input  [7:0] a,          // 8-bit input A\n    input  [7:0] b,          // 8-bit input B\n    input        carry_in,   // Input carry\n    output [7:0] sum,        // 8-bit sum output\n    output       carry_out   // Carry-out signal\n);\n    wire [7:0] internal_sum;\n    wire [7:0] internal_carry;\n\n    // Instantiate 8 Full Adders\n    full_adder fa0 (\n        .a(a[0]),\n        .b(b[0]),\n        .cin(carry_in),\n        .s(internal_sum[0]),\n        .cout(internal_carry[0])\n    );\n\n    full_adder fa1 (\n        .a(a[1]),\n        .b(b[1]),\n        .cin(internal_carry[0]),\n        .s(internal_sum[1]),\n        .cout(internal_carry[1])\n    );\n\n    full_adder fa2 (\n        .a(a[2]),\n        .b(b[2]),\n        .cin(internal_carry[1]),\n        .s(internal_sum[2]),\n        .cout(internal_carry[2])\n    );\n\n    full_adder fa3 (\n        .a(a[3]),\n        .b(b[3]),\n        .cin(internal_carry[2]),\n        .s(internal_sum[3]),\n        .cout(internal_carry[3])\n    );\n\n    full_adder fa4 (\n        .a(a[4]),\n        .b(b[4]),\n        .cin(internal_carry[3]),\n        .s(internal_sum[4]),\n        .cout(internal_carry[4])\n    );\n\n    full_adder fa5 (\n        .a(a[5]),\n        .b(b[5]),\n        .cin(internal_carry[4]),\n        .s(internal_sum[5]),\n        .cout(internal_carry[5])\n    );\n\n    full_adder fa6 (\n        .a(a[6]),\n        .b(b[6]),\n        .cin(internal_carry[5]),\n        .s(internal_sum[6]),\n        .cout(internal_carry[6])\n    );\n\n    full_adder fa7 (\n        .a(a[7]),\n        .b(b[7]),\n        .cin(internal_carry[6]),\n        .s(internal_sum[7]),\n        .cout(carry_out)\n    );\n\n    assign sum = internal_sum;\n\nendmodule",
+    "keywords": ["verilog", "synthesis error", "nested module", "module definition", "syntax error", "module hierarchy"],
+    "severity": "critical"
+  },
+  {
+    "error_id": "synth_redeclared_identifier_001",
+    "stage": "synthesis",
+    "language": "verilog",
+    "error_type": "Declaration Error",
+    "description": "Identifier (wire, reg, etc.) has already been declared within the current scope.",
+    "error_message_patterns": [
+      "'(.+)' has already been declared in this scope.",
+      "It was declared here as a net."
+    ],
+    "potential_causes": [
+      "Declaring the same wire or register name multiple times within the same module or block.",
+      "Copying and pasting code segments without renaming local signals.",
+      "Accidentally using the same name for different signals intended for different purposes within the same scope.",
+      "Misunderstanding the scope of signal declarations."
+    ],
+    "solutions": [
+      "Review the error messages to identify the redeclared identifier and the lines where the declarations occur.",
+      "Rename one of the conflicting identifiers to a unique name within the current scope.",
+      "Ensure that all wire and register declarations within a module have distinct names.",
+      "If the intention was to use the same signal, remove the redundant declaration.",
+      "Pay close attention to the scope of your declarations, especially within `generate` blocks."
+    ],
+    "code_example_with_error": "module arithmetic_engine (\n    input [7:0] A,\n    input [7:0] B,\n    input [2:0] opcode,\n    output [7:0] result\n);\n\n    // ... other declarations ...\n\n    // --- Full Adder Implementation ---\n    wire fa_carry_out_0, fa_carry_out_1, fa_carry_out_2, fa_carry_out_3;\n    wire fa_carry_out_4, fa_carry_out_5, fa_carry_out_6;\n\n    // ... adder logic ...\n\n    // --- Subtractor Implementation (using Adder with Two's Complement) ---\n    wire [7:0] b_inverted;\n    genvar j;\n    generate\n        for (j = 0; j < 8; j = j + 1) begin: invert_b\n            not inv_b (b_inverted[j], B[j]);\n        end\n    endgenerate\n\n    wire sub_carry_out_0, sub_carry_out_1, sub_carry_out_2, sub_carry_out_3;\n    wire sub_carry_out_4, sub_carry_out_5, sub_carry_out_6;\n\n    // ... subtractor logic using 'sub_carry_out_*' ...\n\nendmodule",
+    "code_example_fixed": "module arithmetic_engine (\n    input [7:0] A,\n    input [7:0] B,\n    input [2:0] opcode,\n    output [7:0] result\n);\n\n    // --- Wire Declarations ---\n    wire [7:0] or_out;\n    wire [7:0] nand_out;\n    wire [7:0] nor_out;\n    wire [7:0] and_out;\n    wire [7:0] add_out;\n    wire [7:0] sub_out;\n\n    // --- Bitwise Logical Operations ---\n    genvar i;\n    generate\n        for (i = 0; i < 8; i = i + 1) begin: logical_ops\n            or  g_or (or_out[i], A[i], B[i]);\n            nand g_nand (nand_out[i], A[i], B[i]);\n            nor g_nor (nor_out[i], A[i], B[i]);\n            and g_and (and_out[i], A[i], B[i]);\n        end\n    endgenerate\n\n    // --- Full Adder Implementation ---\n    wire fa_carry_out_0, fa_carry_out_1, fa_carry_out_2, fa_carry_out_3;\n    wire fa_carry_out_4, fa_carry_out_5, fa_carry_out_6;\n\n    wire add_xor_0, add_and_1_0, add_and_2_0;\n    xor fa_sum_0 (add_out[0], A[0], B[0]);\n\n    and fa_carry_and1_0 (add_and_1_0, A[0], B[0]);\n    xor fa_carry_xor_0 (fa_carry_out_0, A[0], B[0]);\n\n    // --- 8-bit Adder ---\n    wire add_carry_in_1;\n    xor add_xor_1_1 (add_xor_1_1, A[1], B[1]);\n    xor add_sum_1 (add_out[1], add_xor_1_1, fa_carry_out_0);\n    and add_and_1_1 (add_and_1_1, A[1], B[1]);\n    and add_and_2_1 (add_and_2_1, add_xor_1_1, fa_carry_out_0);\n    or add_carry_out_1 (fa_carry_out_1, add_and_1_1, add_and_2_1);\n\n    wire add_carry_in_2;\n    xor add_xor_1_2 (add_xor_1_2, A[2], B[2]);\n    xor add_sum_2 (add_out[2], add_xor_1_2, fa_carry_out_1);\n    and add_and_1_2 (add_and_1_2, A[2], B[2]);\n    and add_and_2_2 (add_and_2_2, add_xor_1_2, fa_carry_out_1);\n    or add_carry_out_2 (fa_carry_out_2, add_and_1_2, add_and_2_2);\n\n    wire add_carry_in_3;\n    xor add_xor_1_3 (add_xor_1_3, A[3], B[3]);\n    xor add_sum_3 (add_out[3], add_xor_1_3, fa_carry_out_2);\n    and add_and_1_3 (add_and_1_3, A[3], B[3]);\n    and add_and_2_3 (add_and_2_3, add_xor_1_3, fa_carry_out_2);\n    or add_carry_out_3 (fa_carry_out_3, add_and_1_3, add_and_2_3);\n\n    wire add_carry_in_4;\n    xor add_xor_1_4 (add_xor_1_4, A[4], B[4]);\n    xor add_sum_4 (add_out[4], add_xor_1_4, fa_carry_out_3);\n    and add_and_1_4 (add_and_1_4, A[4], B[4]);\n    and add_and_2_4 (add_and_2_4, add_xor_1_4, fa_carry_out_3);\n    or add_carry_out_4 (fa_carry_out_4, add_and_1_4, add_and_2_4);\n\n    wire add_carry_in_5;\n    xor add_xor_1_5 (add_xor_1_5, A[5], B[5]);\n    xor add_sum_5 (add_out[5], add_xor_1_5, fa_carry_out_4);\n    and add_and_1_5 (add_and_1_5, A[5], B[5]);\n    and add_and_2_5 (add_and_2_5, add_xor_1_5, fa_carry_out_4);\n    or add_carry_out_5 (fa_carry_out_5, add_and_1_5, add_and_2_5);\n\n    wire add_carry_in_6;\n    xor add_xor_1_6 (add_xor_1_6, A[6], B[6]);\n    xor add_sum_6 (add_out[6], add_xor_1_6, fa_carry_out_5);\n    and add_and_1_6 (add_and_1_6, A[6], B[6]);\n    and add_and_2_6 (add_and_2_6, add_xor_1_6, fa_carry_out_5);\n    or add_carry_out_6 (fa_carry_out_6, add_and_1_6, add_and_2_6);\n\n    wire add_carry_in_7;\n    xor add_xor_1_7 (add_xor_1_7, A[7], B[7]);\n    xor add_sum_7 (add_out[7], add_xor_1_7, fa_carry_out_6);\n    and add_and_1_7 (add_and_1_7, A[7], B[7]);\n    and add_and_2_7 (add_and_2_7, add_xor_1_7, fa_carry_out_6);\n    // Carry out of MSB is ignored for now\n\n    // --- Subtractor Implementation (using Adder with Two's Complement) ---\n    wire [7:0] b_inverted;\n    genvar j;\n    generate\n        for (j = 0; j < 8; j = j + 1) begin: invert_b\n            not inv_b (b_inverted[j], B[j]);\n        end\n    endgenerate\n\n    // --- 8-bit Subtractor (using Adder) ---\n    wire sub_carry_in_1;\n    xor sub_xor_1_1 (sub_xor_1_1, A[1], b_inverted[1]);\n    xor sub_sum_1 (sub_out[1], sub_xor_1_1, fa_carry_out_0);\n    and sub_and_1_1 (sub_and_1_1, A[1], b_inverted[1]);\n    and sub_and_2_1 (sub_and_2_1, sub_xor_1_1, fa_carry_out_0);\n    // Reusing fa_carry_out_1 which is the carry-out (borrow-out for subtraction)\n\n    wire sub_carry_in_2;\n    xor sub_xor_1_2 (sub_xor_1_2, A[2], b_inverted[2]);\n    xor sub_sum_2 (sub_out[2], sub_xor_1_2, fa_carry_out_1);\n    and sub_and_1_2 (sub_and_1_2, A[2], b_inverted[2]);\n    and sub_and_2_2 (sub_and_2_2, sub_xor_1_2, fa_carry_out_1);\n    // Reusing fa_carry_out_2\n\n    wire sub_carry_in_3;\n    xor sub_xor_1_3 (sub_xor_1_3, A[3], b_inverted[3]);\n    xor sub_sum_3 (sub_out[3], sub_xor_1_3, fa_carry_out_2);\n    and sub_and_1_3 (sub_and_1_3, A[3], b_inverted[3]);\n    and sub_and_2_3 (sub_and_2_3, sub_xor_1_3, fa_carry_out_2);\n    // Reusing fa_carry_out_3\n\n    wire sub_carry_in_4;\n    xor sub_xor_1_4 (sub_xor_1_4, A[4], b_inverted[4]);\n    xor sub_sum_4 (sub_out[4], sub_xor_1_4, fa_carry_out_3);\n    and sub_and_1_4 (sub_and_1_4, A[4], b_inverted[4]);\n    and sub_and_2_4 (sub_and_2_4, sub_xor_1_4, fa_carry_out_3);\n    // Reusing fa_carry_out_4\n\n    wire sub_carry_in_5;\n    xor sub_xor_1_5 (sub_xor_1_5, A[5], b_inverted[5]);\n    xor sub_sum_5 (sub_out[5], sub_xor_1_5, fa_carry_out_4);\n    and sub_and_1_5 (sub_and_1_5, A[5], b_inverted[5]);\n    and sub_and_2_5 (sub_and_2_5, sub_xor_1_5, fa_carry_out_4);\n    // Reusing fa_carry_out_5\n\n    wire sub_carry_in_6;\n    xor sub_xor_1_6 (sub_xor_1_6, A[6], b_inverted[6]);\n    xor sub_sum_6 (sub_out[6], sub_xor_1_6, fa_carry_out_5);\n    and sub_and_1_6 (sub_and_1_6, A[6], b_inverted[6]);\n    and sub_and_2_6 (sub_and_2_6, sub_xor_1_6, fa_carry_out_5);\n    // Reusing fa_carry_out_6\n\n    wire sub_carry_in_7;\n    xor sub_xor_1_7 (sub_xor_1_7, A[7], b_inverted[7]);\n    xor sub_sum_7 (sub_out[7], sub_xor_1_7, fa_carry_out_6);\n    and sub_and_1_7 (sub_and_1_7, A[7], b_inverted[7]);\n    and sub_and_2_7 (sub_and_2_7, sub_xor_1_7, fa_carry_out_6);\n    // Carry out of MSB is ignored for now\n\n    // --- Result Multiplexer ---\n    genvar k;\n    generate\n        for (k = 0; k < 8; k = k + 1) begin: result_mux\n            wire sel_or, sel_nand, sel_nor, sel_and, sel_add, sel_sub;\n\n            // Decode Opcode\n            not opcode_n0 (sel_or_n0, opcode[0]);\n            not opcode_n1 (sel_or_n1, opcode[1]);\n            not opcode_n2 (sel_or_n2, opcode[2]);\n            and sel_or_and (sel_or, sel_or_n0, sel_or_n1, sel_or_n2);\n\n            and sel_nand_and (sel_nand, opcode[0], sel_or_n1, sel_or_n2);\n\n            and sel_nor_and (sel_nor, sel_or_n0, opcode[1], sel_or_n2);\n\n            and sel_and_and (sel_and, opcode[0], opcode[1], sel_or_n2);\n\n            and sel_add_and (sel_add, sel_or_n0, sel_or_n1, opcode[2]);\n\n            and sel_sub_and (sel_sub, opcode[0], sel_or_n1, opcode[2]);\n\n            wire w_or, w_nand, w_nor, w_and, w_add, w_sub;\n            and g_sel_or (w_or, or_out[k], sel_or);\n            and g_sel_nand (w_nand, nand_out[k], sel_nand);\n            and g_sel_nor (w_nor, nor_out[k], sel_nor);\n            and g_sel_and (w_and, and_out[k], sel_and);\n            and g_sel_add (w_add, add_out[k], sel_add);\n            and g_sel_sub (w_sub, sub_out[k], sel_sub);\n\n            or r_or_nand (r_ornand, w_or, w_nand);\n            or r_nor_and (r_norand, w_nor, w_and);\n            or r_add_sub (r_addsub, w_add, w_sub);\n            or r_1_2 (r_12, r_ornand, r_norand);\n            or r_final (result[k], r_12, r_addsub);\n\n        end\n    endgenerate\n\nendmodule",
+    "keywords": ["verilog", "synthesis error", "declaration error", "redeclared identifier", "wire", "scope"],
+    "severity": "critical"
+  },
+  {
+    "error_id": "synth_missing_genvar_001",
+    "stage": "synthesis",
+    "language": "verilog",
+    "error_type": "Declaration Error",
+    "description": "`genvar` declaration is missing for a variable used in a `generate` loop.",
+    "error_message_patterns": [
+      "genvar is missing for generate \"(.+)\" variable '(.+)'."
+    ],
+    "potential_causes": [
+      "Using a variable as a loop index in a `generate` statement without declaring it as `genvar`.",
+      "Forgetting to declare `genvar` for loop variables in `generate` blocks.",
+      "Mistaking `integer` or other variable types for `genvar` in the context of `generate` loops."
+    ],
+    "solutions": [
+      "Declare the loop variable within the `generate` block as type `genvar` before the `for` loop.",
+      "Ensure that all variables used as loop indices in `generate` statements are explicitly declared as `genvar`.",
+      "Review the syntax of `generate` statements and verify that `genvar` is used for loop control variables.",
+      "Remember that `genvar` is specifically for compile-time looping constructs and differs from runtime loop variables."
+    ],
+    "code_example_with_error": "module arithmetic_engine (\n    input [7:0] A,\n    input [7:0] B,\n    input [2:0] opcode,\n    output [7:0] result\n);\n    // ... other code ...\n\n    // 8-bit Subtractor implementation (using two's complement)\n    wire c_in_sub;\n    wire [7:0] carry_sub;\n    wire [7:0] b_inv;\n    assign c_in_sub = 1'b1; // Initial carry for subtraction (for adding 1 in two's complement)\n\n    generate\n        for (k = 0; k < 8; k = k + 1) begin : inv_b_loop\n            not g_not_b (b_inv[k], B[k]);\n        end\n    endgenerate\n\n    // ... rest of the code ...\n\nendmodule",
+    "code_example_fixed": "module arithmetic_engine (\n    input [7:0] A,\n    input [7:0] B,\n    input [2:0] opcode,\n    output [7:0] result\n);\n    // ... other code ...\n\n    // 8-bit Subtractor implementation (using two's complement)\n    wire c_in_sub;\n    wire [7:0] carry_sub;\n    wire [7:0] b_inv;\n    assign c_in_sub = 1'b1; // Initial carry for subtraction (for adding 1 in two's complement)\n\n    genvar k;\n    generate\n        for (k = 0; k < 8; k = k + 1) begin : inv_b_loop\n            not g_not_b (b_inv[k], B[k]);\n        end\n    endgenerate\n\n    // ... rest of the code ...\n\nendmodule",
+    "keywords": ["verilog", "synthesis error", "declaration error", "genvar", "generate loop"],
+    "severity": "critical"
+  },
+  {
+    "error_id": "synth_array_index_out_of_bounds_001",
+    "stage": "synthesis",
+    "language": "verilog",
+    "error_type": "Range Error",
+    "description": "Array index is out of the declared bounds for the array.",
+    "error_message_patterns": [
+      "Index (.+) is out of range."
+    ],
+    "potential_causes": [
+      "Accessing an element of an array (wire, reg, memory) using an index that is greater than or equal to the array's size.",
+      "Off-by-one errors in loop conditions or index calculations.",
+      "Incorrectly sized arrays for the intended operations.",
+      "Dynamically calculated indices exceeding array boundaries."
+    ],
+    "solutions": [
+      "Review the array declaration to determine the valid index range (0 to size-1).",
+      "Check the loop conditions and index calculations to ensure they do not exceed the array bounds.",
+      "If the array needs to accommodate a larger range of values, increase its declared size.",
+      "Ensure that dynamically calculated indices are properly bounded before being used to access the array.",
+      "For carry chains, consider declaring the carry array with one extra bit to accommodate the final carry-out."
+    ],
+    "code_example_with_error": "module arithmetic_engine (\n    input [7:0] A,\n    input [7:0] B,\n    input [2:0] opcode,\n    output [7:0] result\n);\n    // ... other declarations ...\n\n    // --- Addition ---\n    wire [7:0] add_carry;\n    wire add_carry_in;\n    assign add_carry[0] = add_carry_in; // Initial carry-in is 0 for addition\n\n    // Full Adder Implementation\n    genvar j;\n    generate\n        for (j = 0; j < 8; j = j + 1) begin : adder_bits\n            xor add_sum_xor1 (add_out[j], A[j], B[j]);\n            xor add_sum_xor2 (w_add_sum, add_sum_xor1, add_carry[j]);\n            and add_carry_and1 (w_add_carry1, A[j], B[j]);\n            and add_carry_and2 (w_add_carry2, add_carry[j], add_sum_xor1);\n            or  add_carry_or  (add_carry[j+1], w_add_carry1, w_add_carry2);\n            assign add_out[j] = w_add_sum;\n        end\n    endgenerate\n\n    // ... rest of the code ...\n\nendmodule",
+    "code_example_fixed": "module arithmetic_engine (\n    input [7:0] A,\n    input [7:0] B,\n    input [2:0] opcode,\n    output [7:0] result\n);\n    // ... other declarations ...\n\n    // --- Addition ---\n    wire [8:0] add_carry; // Increased size to accommodate carry-out\n    wire add_carry_in;\n    assign add_carry[0] = add_carry_in; // Initial carry-in is 0 for addition\n\n    // Full Adder Implementation\n    genvar j;\n    generate\n        for (j = 0; j < 8; j = j + 1) begin : adder_bits\n            xor add_sum_xor1 (add_out[j], A[j], B[j]);\n            xor add_sum_xor2 (w_add_sum, add_sum_xor1, add_carry[j]);\n            and add_carry_and1 (w_add_carry1, A[j], B[j]);\n            and add_carry_and2 (w_add_carry2, add_carry[j], add_sum_xor1);\n            or  add_carry_or  (add_carry[j+1], w_add_carry1, w_add_carry2);\n            assign add_out[j] = w_add_sum;\n        end\n    endgenerate\n\n    // ... rest of the code ...\n\nendmodule",
+    "keywords": ["verilog", "synthesis error", "range error", "array index", "out of bounds"],
+    "severity": "critical"
+  },
+  {
+    "error_id": "synth_unbound_identifier_generate_001",
+    "stage": "synthesis",
+    "language": "verilog",
+    "error_type": "Binding Error",
+    "description": "Unable to bind a wire, register, or memory identifier within a `generate` block, often due to incorrect scope or typo in the identifier name.",
+    "error_message_patterns": [
+      "Unable to bind wire/reg/memory `(.+)' in `(.+)'"
+    ],
+    "potential_causes": [
+      "Using a loop variable from a different `generate` block as an index or signal name within the current `generate` block.",
+      "Typographical errors in signal names or loop variables.",
+      "Incorrectly referencing signals that are not within the current scope of the `generate` block.",
+      "Mixing up loop variables from different `generate` loops when accessing arrays or signals."
+    ],
+    "solutions": [
+      "Verify that the loop variable used as an index or signal name corresponds to the current `generate` block.",
+      "Check for typos in the names of wires, registers, memories, and loop variables.",
+      "Ensure that the intended signals are within the scope where they are being referenced.",
+      "Double-check the loop variable names when accessing arrays or signals within nested or sequential `generate` blocks.",
+      "Use unique and descriptive names for loop variables in different `generate` blocks to avoid confusion."
+    ],
+    "code_example_with_error": "module arithmetic_engine (\n    input [7:0] A,\n    input [7:0] B,\n    input [2:0] opcode,\n    output [7:0] result\n);\n    // ... other declarations ...\n\n    // Bitwise OR operation\n    genvar i_or;\n    generate\n        for (i_or = 0; i_or < 8; i_or = i_or + 1) begin : or_gates\n            or g_or (w_or_result[i_or], A[i_or], B[i_or]);\n        end\n    endgenerate\n\n    // Bitwise NOR operation\n    genvar i_nor;\n    generate\n        for (i_nor = 0; i_nor < 8; i_nor = i_nor + 1) begin : nor_gates\n            nor g_nor (w_nor_result[i_nor], A[i_nor], B[i_or]); // Error: Using i_or instead of i_nor\n        end\n    endgenerate\n\n    // ... rest of the code ...\n\nendmodule",
+    "code_example_fixed": "module arithmetic_engine (\n    input [7:0] A,\n    input [7:0] B,\n    input [2:0] opcode,\n    output [7:0] result\n);\n    // ... other declarations ...\n\n    // Bitwise OR operation\n    genvar i_or;\n    generate\n        for (i_or = 0; i_or < 8; i_or = i_or + 1) begin : or_gates\n            or g_or (w_or_result[i_or], A[i_or], B[i_or]);\n        end\n    endgenerate\n\n    // Bitwise NOR operation\n    genvar i_nor;\n    generate\n        for (i_nor = 0; i_nor < 8; i_nor = i_nor + 1) begin : nor_gates\n            nor g_nor (w_nor_result[i_nor], A[i_nor], B[i_nor]);\n        end\n    endgenerate\n\n    // ... rest of the code ...\n\nendmodule",
+    "keywords": ["verilog", "synthesis error", "binding error", "generate block", "scope", "identifier", "loop variable"],
+    "severity": "critical"
+  },
+  
+    {
+      "error_id": "behavioral_construct_in_structural",
+      "stage": "design",
+      "language": "verilog",
+      "error_type": "Behavioral Construct in Structural Design",
+      "description": "Use of `always` block which is a behavioral-level construct in a strictly structural Verilog design. Structural design should only include gate-level primitives and module instantiations.",
+      "error_message_patterns": [],
+      "potential_causes": ["Incorrect understanding of structural Verilog.", "LLM not fully adhering to the prompt's instructions to avoid behavioral constructs."],
+      "solutions": ["Implement the design using only basic logic gates (and, or, not, xor, nand, nor) and the provided `d_flip_flop` module.", "Ensure all outputs are driven by instantiated module output ports or continuous assignment statements."],
+      "code_example_with_error": "```verilog\nmodule elegant_storage (\n    input clk,\n    input rst,          // Synchronous reset, active high\n    input write_enable, // Write enable signal\n    input [7:0] data_in, // Data input for writing\n    output reg [7:0] data_out // Data output, always reflects stored value\n);\n    // ... other code ...\n    always @(posedge clk) begin\n        if (rst) begin\n            data_out <= 8'b0; // Reset the output to 0\n        end else begin\n            data_out <= current_data; // Update the output with the current data\n        end\n    end\n\nendmodule\n```",
+      "code_example_fixed": "```verilog\n// Modified based on d_flip_flop\nmodule elegant_storage (\n    input clk,\n    input rst,\n    input write_enable,\n    input [7:0] data_in,\n    output [7:0] data_out // Changed to wire type\n);\n\n    wire [7:0] dff_outputs; // Wires to store the output of each flip-flop\n\n    // Instantiate 8 D flip-flops using a generate block\n    genvar i;\n    generate\n        for (i = 0; i < 8; i = i + 1) begin : storage_ff\n            wire dff_input;\n\n            // Use basic gates to build the logic for the D flip-flop input\n            and_gate enable_and_data (\n                .a(write_enable),\n                .b(data_in[i]),\n                .y(dff_input)\n            );\n\n            // Add a register stage for delay\n            d_flip_flop data_ff (\n                .clk(clk),\n                .rst(rst),\n                .d(dff_input),\n                .q(dff_outputs[i])\n            );\n\n            d_flip_flop output_ff (\n              .clk(clk),\n              .rst(rst),\n              .d(dff_outputs[i]),\n              .q(data_out[i])\n            );\n        end\n    endgenerate\n\nendmodule\n```",
+      "keywords": ["structural Verilog", "always block", "behavioral construct", "gate-level", "instantiation"],
+      "severity": "critical"
+    },
+    {
+      "error_id": "unknown_module_type",
+      "stage": "compilation",
+      "language": "verilog",
+      "error_type": "Unknown Module Type",
+      "description": "Instantiation of undefined modules in Verilog code.",
+      "error_message_patterns": ["Unknown module type: (.+)"],
+      "potential_causes": ["Missing module definition.", "Module defined in another file but not included.", "Typographical error in module name during instantiation."],
+      "solutions": ["Define the missing module before instantiating it.", "If the module is defined in another file, use the `include directive to include it.", "Check for typos in the module name during instantiation."],
+      "code_example_with_error": "```verilog\nmodule elegant_storage ( /* ... */ );\n    // ...\n    d_flip_flop dff_inst ( /* ... */ ); // d_flip_flop undefined\n    and_gate and_inst ( /* ... */ );    // and_gate undefined\n    // ...\nendmodule\n```",
+      "code_example_fixed": "```verilog\nmodule and_gate (\n    input a,\n    input b,\n    output y\n);\n    assign y = a & b;\nendmodule\n\nmodule d_flip_flop (\n    input clk,\n    input rst,\n    input d,\n    output reg q\n);\n    always @(posedge clk or posedge rst) begin\n        if (rst)\n            q <= 0;\n        else\n            q <= d;\n    end\nendmodule\n\n// Then the definition of the elegant_storage module...\n```",
+      "keywords": ["verilog", "compilation error", "unknown module", "module definition", "instantiation"],
+      "severity": "critical"
+    },
+    {
+        "error_id": "reg_driven_by_continuous_assignment",
+        "stage": "compilation",
+        "language": "verilog",
+        "error_type": "Incorrect Signal Type Assignment",
+        "description": "A `reg` type signal is being driven by a continuous assignment statement or a primitive, which is not allowed in Verilog.",
+        "error_message_patterns": ["reg (.+); cannot be driven by primitives or continuous assignment."],
+        "potential_causes": ["Using an `assign` statement to drive a `reg` type signal.", "Driving a `reg` type signal directly from the output of a primitive gate."],
+        "solutions": ["Change the signal type from `reg` to `wire` if it is intended to be driven continuously.", "Use an `always` block with non-blocking assignments (`<=`) to assign values to `reg` type signals."],
+        "code_example_with_error": "```verilog\nmodule elegant_storage (\n    // ...\n    output reg [7:0] data_out\n    // ...\n);\n    // ...\n    generate\n        for (i = 0; i < 8; i = i + 1) begin : bit_storage\n            // ...\n            and_gate and_inst (\n                .a(write_enable),\n                .b(data_in[i]),\n                .y(next_data_out[i]) // next_data_out indirectly drives data_out which is reg\n            );\n           // ...\n        end\n    endgenerate\n    // ...\n    always @(posedge clk) begin\n        data_out <= current_data; \n    end\nendmodule\n```",
+        "code_example_fixed": "```verilog\nmodule elegant_storage (\n    // ...\n    output [7:0] data_out // Changed to wire type\n    // ...\n);\n    // ... Other code ...\n    generate\n        for (i = 0; i < 8; i = i + 1) begin : dff_loop\n            // ...\n            d_flip_flop dff (\n                .clk(clk),\n                .rst(rst),\n                .d(next_data_out[i]),\n                .q(data_out[i]) // Directly connected to d_flip_flop output\n            );\n        end\n    endgenerate\n    // ...\n    //Removed always block\nendmodule\n```",
+        "keywords": ["verilog", "compilation error", "reg", "wire", "continuous assignment", "procedural assignment"],
+        "severity": "critical"
+    },
+    {
+      "error_id": "incorrect_output_port_assignment",
+      "stage": "compilation",
+      "language": "verilog",
+      "error_type": "Output Port Assignment Error",
+      "description": "An output port is being assigned in a way that is not allowed or not compatible with its type.",
+      "error_message_patterns": ["Output port expression must support continuous assignment."],
+      "potential_causes": ["Declaring an output port as `reg` but not assigning it within an `always` block.", "Assigning an output port using an invalid expression.", "Connecting multiple drivers to the same output port."],
+      "solutions": ["Ensure that `reg` type output ports are only assigned within `always` blocks using non-blocking assignments.", "Declare output ports as `wire` if they are driven by combinational logic or directly by module outputs.", "Verify that there is only one driver for each output port."],
+      "code_example_with_error": "```verilog\nmodule elegant_storage (\n    // ...\n    output reg [7:0] data_out // data_out is declared as reg\n    // ...\n);\n    // ...\n    generate\n        for (i = 0; i < 8; i = i + 1) begin : bit_storage\n            // ...\n            and_gate and_inst (\n                .a(write_enable),\n                .b(data_in[i]),\n                .y(next_data_out[i]) // next_data_out indirectly drives data_out\n            );\n\n            d_flip_flop dff_inst (\n                .clk(clk),\n                .rst(rst),\n                .d(next_data_out[i]),\n                .q(current_data[i]),\n                .q_not() \n            );        \n        // ...\n    endgenerate\n    // ...\n    // data_out is also assigned in an always block\n    always @(posedge clk) begin\n      data_out <= current_data;\n    end\nendmodule\n```",
+      "code_example_fixed": "```verilog\nmodule elegant_storage (\n    // ...\n    output [7:0] data_out // data_out changed to wire type\n    // ...\n);\n    // ...\n    generate\n        for (i = 0; i < 8; i = i + 1) begin : dff_loop\n            // ...\n            d_flip_flop dff (\n                .clk(clk),\n                .rst(rst),\n                .d(next_data_out[i]),\n                .q(data_out[i]) // Directly connected to d_flip_flop output\n            );\n        end\n    endgenerate\n    // ...\n    //removed always block\nendmodule\n```",
+      "keywords": ["verilog", "compilation error", "output port", "reg", "wire", "assignment"],
+      "severity": "critical"
+    },
+  {
+      "error_id": "synth_syntax_001",
+      "stage": "synthesis",
+      "language": "verilog",
+      "error_type": "Syntax Error",
+      "description": "General syntax error in Verilog code.",
+      "error_message_patterns": [
+        "Syntax error near '(.+)'",
+        "Unexpected token '(.+)'"
+      ],
+      "potential_causes": [
+        "Typographical errors in keywords, identifiers, or operators.",
+        "Missing semicolons, commas, or parentheses.",
+        "Incorrect use of Verilog syntax for declarations, assignments, or control flow.",
+        "Misspelled keywords (e.g., `modue` instead of `module`)."
+      ],
+      "solutions": [
+        "Carefully review the line number indicated in the error message.",
+        "Check for typos and ensure all keywords are spelled correctly.",
+        "Verify that all statements are properly terminated with semicolons.",
+        "Ensure that parentheses and brackets are correctly matched.",
+        "Consult the Verilog language reference manual for correct syntax."
+      ],
+      "code_example_with_error": "module my_logic (\n    input clk\n    output reg q  // Missing comma\n);\n    always @(posedge clk)\n        q <= ~q // Missing semicolon\n    end\nendmodule",
+      "code_example_fixed": "module my_logic (\n    input clk,\n    output reg q\n);\n    always @(posedge clk) begin\n        q <= ~q;\n    end\nendmodule",
+      "keywords": ["verilog", "synthesis error", "syntax error", "typo", "missing semicolon"],
+      "severity": "critical"
+    },
+    {
+      "error_id": "synth_undeclared_002",
+      "stage": "synthesis",
+      "language": "verilog",
+      "error_type": "Undeclared Identifier",
+      "description": "Using a signal or variable that has not been declared.",
+      "error_message_patterns": [
+        "Identifier '(.+)' is not declared",
+        "Reference to undeclared identifier '(.+)'"
+      ],
+      "potential_causes": [
+        "Forgetting to declare a wire, reg, or input/output port.",
+        "Typographical errors in signal or variable names.",
+        "Using a signal from a different scope without proper connection."
+      ],
+      "solutions": [
+        "Check the error message for the name of the undeclared identifier.",
+        "Ensure that all signals and variables are declared with the correct type (wire, reg, input, output).",
+        "Verify the spelling of the identifier matches its declaration.",
+        "If the signal is from another module, ensure it's properly connected through port mapping."
+      ],
+      "code_example_with_error": "module my_circuit (\n    input a,\n    input b,\n    output y\n);\n    assign y = a & c; // 'c' is not declared\nendmodule",
+      "code_example_fixed": "module my_circuit (\n    input a,\n    input b,\n    output y\n);\n    wire c; // Declaration added\n    assign y = a & c;\nendmodule",
+      "keywords": ["verilog", "synthesis error", "undeclared identifier", "missing declaration", "variable not defined"],
+      "severity": "critical"
+    },
+    {
+      "error_id": "testbench_stimulus_001",
+      "stage": "testbench",
+      "language": "verilog",
+      "error_type": "Incorrect Testbench Stimulus",
+      "description": "Testbench does not provide the correct input signals or timing to properly test the design.",
+      "error_message_patterns": [
+        "Simulation mismatch at time (.+)",
+        "Unexpected output value (.+)"
+      ],
+      "potential_causes": [
+        "Incorrect sequence or values of input stimuli.",
+        "Insufficient time delay for signals to propagate.",
+        "Forgetting to initialize signals.",
+        "Using blocking assignments (=) when non-blocking (<=) are needed in sequential blocks."
+      ],
+      "solutions": [
+        "Review the testbench code and ensure the input signals are being driven with the expected values at the correct times.",
+        "Increase delays (`#`) to allow for signal propagation.",
+        "Initialize all relevant signals in an `initial` block.",
+        "Use non-blocking assignments (`<=`) for signal updates within `always` blocks that model sequential logic.",
+        "Use waveform viewers to observe signal behavior and identify discrepancies."
+      ],
+      "code_example_with_error": "module testbench;\n    reg clk, rst, d;\n    wire q;\n    dff dut (.*); // Instance of the design\n\n    initial begin\n        clk = 0;\n        rst = 1;\n        d = 0;\n        #10 rst = 0; // Insufficient delay before toggling d\n        d = 1;\n        #5  // Too short delay\n        $finish;\n    end\n\n    always #5 clk = ~clk;\nendmodule",
+      "code_example_fixed": "module testbench;\n    reg clk, rst, d;\n    wire q;\n    dff dut (.*);\n\n    initial begin\n        clk = 0;\n        rst = 1;\n        d = 0;\n        #10 rst = 0;\n        #10 d = 1;\n        #10 $finish;\n    end\n\n    always #5 clk = ~clk;\nendmodule",
+      "keywords": ["verilog", "testbench error", "stimulus", "timing", "delay", "simulation mismatch"],
+      "severity": "major"
+    },
+    {
+        "error_id": "verilog_reg_driven_by_assign",
+        "stage": "compilation",
+        "language": "verilog",
+        "error_type": "Incorrect Signal Type Assignment",
+        "description": "A `reg` type signal cannot be driven by a continuous assignment (`assign`) statement or primitives. It can only be assigned within an `always` block.",
+        "error_message_patterns": [
+          "reg (.+); cannot be driven by primitives or continuous assignment",
+          "reg <signal>; cannot be driven by primitives or continuous assignment"
+        ],
+        "potential_causes": [
+          "Using an `assign` statement to assign a value to a `reg` type signal.",
+          "Having a `reg` type signal as an output port and trying to assign it using a continuous assignment or primitive."
+        ],
+        "solutions": [
+          "Change the `assign` statement to an `always` block.",
+          "If continuous assignment is needed outside the module, change the `reg` type signal to `wire`.",
+          "Ensure that `assign` statements are not used to assign values to `reg` type ports."
+        ],
+        "code_example_with_error": "module example (\n    input [3:0] a, b,\n    input cin,\n    output reg [3:0] sum,\n    output reg cout\n);\n\n    wire c0, c1, c2, c3;\n\n    // Full adders for each bit position\n    full_adder fa0 (.a(a[0]), .b(b[0]), .cin(cin), .sum(sum[0]), .cout(c0));\n    full_adder fa1 (.a(a[1]), .b(b[1]), .cin(c0), .sum(sum[1]), .cout(c1));\n    full_adder fa2 (.a(a[2]), .b(b[2]), .cin(c1), .sum(sum[2]), .cout(c2));\n    full_adder fa3 (.a(a[3]), .b(b[3]), .cin(c2), .sum(sum[3]), .cout(c3));\n\n    // OR gate to combine all carry outs\n    assign cout = c0 | c1 | c2 | c3;\n\nendmodule",
+        "code_example_fixed": "module example (\n    input [3:0] a, b,\n    input cin,\n    output wire [3:0] sum,\n    output wire cout\n);\n\n    wire c0, c1, c2, c3;\n\n    // Full adders for each bit position\n    full_adder fa0 (.a(a[0]), .b(b[0]), .cin(cin), .sum(sum[0]), .cout(c0));\n    full_adder fa1 (.a(a[1]), .b(b[1]), .cin(c0), .sum(sum[1]), .cout(c1));\n    full_adder fa2 (.a(a[2]), .b(b[2]), .cin(c1), .sum(sum[2]), .cout(c2));\n    full_adder fa3 (.a(a[3]), .b(b[3]), .cin(c2), .sum(sum[3]), .cout(c3));\n\n    // OR gate to combine all carry outs\n    assign cout = c0 | c1 | c2 | c3;\n\nendmodule",
+        "keywords": [
+          "verilog",
+          "compilation error",
+          "reg",
+          "assign",
+          "continuous assignment",
+          "primitives"
+        ],
+        "severity": "major"
+      },
+      {
+        "error_id": "verilog_output_port_continuous_assignment",
+        "stage": "compilation",
+        "language": "verilog",
+        "error_type": "Incorrect Output Port Type",
+        "description": "An output port of type `reg` cannot be directly assigned using a continuous assignment (`assign`).",
+        "error_message_patterns": [
+          "Output port expression must support continuous assignment"
+        ],
+        "potential_causes": [
+          "Declaring an output port as `reg` and attempting to assign it a value using an `assign` statement."
+        ],
+        "solutions": [
+          "Change the `reg` type output port to `wire`.",
+          "If assignment within an `always` block is needed, keep the `reg` type and use assignments within the `always` block, not `assign` statements."
+        ],
+        "code_example_with_error": "module example (\n    input [3:0] a, b,\n    input cin,\n    output reg [3:0] sum,\n    output reg cout\n);\n\n    wire c0, c1, c2, c3;\n\n    // Full adders for each bit position\n    full_adder fa0 (.a(a[0]), .b(b[0]), .cin(cin), .sum(sum[0]), .cout(c0));\n    full_adder fa1 (.a(a[1]), .b(b[1]), .cin(c0), .sum(sum[1]), .cout(c1));\n    full_adder fa2 (.a(a[2]), .b(b[2]), .cin(c1), .sum(sum[2]), .cout(c2));\n    full_adder fa3 (.a(a[3]), .b(b[3]), .cin(c2), .sum(sum[3]), .cout(c3));\n\n    // OR gate to combine all carry outs\n    assign cout = c0 | c1 | c2 | c3;\n\nendmodule",
+        "code_example_fixed": "module example (\n    input [3:0] a, b,\n    input cin,\n    output wire [3:0] sum,\n    output wire cout\n);\n\n    wire c0, c1, c2, c3;\n\n    // Full adders for each bit position\n    full_adder fa0 (.a(a[0]), .b(b[0]), .cin(cin), .sum(sum[0]), .cout(c0));\n    full_adder fa1 (.a(a[1]), .b(b[1]), .cin(c0), .sum(sum[1]), .cout(c1));\n    full_adder fa2 (.a(a[2]), .b(b[2]), .cin(c1), .sum(sum[2]), .cout(c2));\n    full_adder fa3 (.a(a[3]), .b(b[3]), .cin(c2), .sum(sum[3]), .cout(c3));\n\n    // OR gate to combine all carry outs\n    assign cout = c0 | c1 | c2 | c3;\n\nendmodule",
+        "keywords": [
+          "verilog",
+          "compilation error",
+          "output port",
+          "reg",
+          "wire",
+          "assign",
+          "continuous assignment"
+        ],
+        "severity": "major"
+      },
+      {
+        "error_id": "verilog_nested_module",
+        "stage": "compilation",
+        "language": "verilog",
+        "error_type": "Incorrect Module Definition",
+        "description": "Module definitions cannot be nested inside another module.",
+        "error_message_patterns": [
+          "Module definition (.+) cannot nest into module (.+)"
+        ],
+        "potential_causes": [
+          "Defining a module within the definition of another module."
+        ],
+        "solutions": [
+          "Move the inner module definition outside of the outer module definition."
+        ],
+        "code_example_with_error": "module box(input clk,d, output q);\n   reg q;\n   always @(posedge clk)\n      q <= d;\n   module mux2to1(input a,b,sel, output out);\n      assign out = sel ? a : b;\n   endmodule\nendmodule",
+        "code_example_fixed": "module mux2to1(input a,b,sel, output out);\n   assign out = sel ? a : b;\nendmodule\n\nmodule box(input clk,d, output q);\n   reg q;\n   always @(posedge clk)\n      q <= d;\nendmodule",
+        "keywords": [
+          "verilog",
+          "compilation error",
+          "module",
+          "nested module"
+        ],
+        "severity": "major"
+      },
+      {
+        "error_id": "verilog_invalid_module_item",
+        "stage": "compilation",
+        "language": "verilog",
+        "error_type": "Incorrect Module Item",
+        "description": "Using delay statements with primitives is not allowed.",
+        "error_message_patterns": [
+          "Invalid module item"
+        ],
+        "potential_causes": [
+          "Using incorrect syntax or statements in the module definition, especially adding delay statements when using primitives."
+        ],
+        "solutions": [
+          "Remove the delay operator `#` in the definition when instantiating primitives.",
+          "Review the module definition to ensure the correctness of syntax and statements."
+        ],
+        "code_example_with_error": "module example(input d,rst, output s);\n   and (s, d, rst); #1\nendmodule",
+        "code_example_fixed": "module example(input d,rst, output s);\n   and (s, d, rst);\nendmodule",
+        "keywords": [
+          "verilog",
+          "compilation error",
+          "module item",
+          "invalid",
+          "#"
+        ],
+        "severity": "major"
+      }
+    
+  ]

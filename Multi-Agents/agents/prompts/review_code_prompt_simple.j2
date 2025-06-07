@@ -1,0 +1,29 @@
+{# agents/prompts/review_code_prompt_simple.j2 #}
+**Previous Execution Result:**
+```
+{{ previous_execution_result }}
+```
+
+{% if retrieved_results_errors_pattern %}
+**Note:** You are provided with a list of common errors that you should avoid in your design. Please ensure that your design does not contain any of the following patterns:
+{{ retrieved_results_errors_pattern }}
+```
+{% endif %}
+{% if retrieved_results_best_practices %}
+**Note:** You are provided with a list of best practices that you should follow in your design. Please ensure that your design adheres to the following guidelines:
+```verilog
+{{ retrieved_results_best_practices }}
+```
+{% endif %}
+{% if retrieved_results_circuit_designs %}
+**Note:** You are provided with a list of circuit designs that you can use as reference for your design. Please ensure that your design follows the guidelines provided in the following circuit designs:
+```verilog
+{{ retrieved_results_circuit_designs }}
+```
+{% endif %}
+
+**Based on execution results, carefully analyze the logs. If tests failed, identify the root causes and correct the logic, output connections, and ensure `output reg` is correctly driven by `d_flip_flop` output. If no failures, still review for structural correctness and adherence to guidelines.**
+{% endif %}
+
+**Based on execution results, carefully analyze the logs. If tests failed, identify the root causes and correct the logic, output connections, and ensure `output reg` is correctly driven by `d_flip_flop` output. If no failures, still review for structural correctness and adherence to guidelines.**
+{% include 'output_format.j2' %} {# 引入输出格式部分 #}

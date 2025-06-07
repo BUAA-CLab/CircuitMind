@@ -1,0 +1,4 @@
+debug: true
+logging:
+  console_enabled: true
+  level: DEBUG

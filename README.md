@@ -24,6 +24,7 @@
   [![Python Version](https://img.shields.io/badge/python-3.x-blue)](https://www.python.org/) <div>&nbsp;</div>
 
   [📚 Framework README](https://github.com/BUAA-CLab/CircuitMind/blob/main/CircuitMind/README.md) |
+  [🤖 Multi-Agent Framework](./Multi-Agents/Multi-Agents-README.md) |
   [💾 TC-Bench Dataset README](https://github.com/BUAA-CLab/CircuitMind/blob/main/TC-Bench/README.md) |
   [📝 Paper](https://arxiv.org/pdf/2504.14625v3) |
   [🐛 Report Issues](https://github.com/BUAA-CLab/CircuitMind/issues/new/choose)
@@ -39,6 +40,7 @@
 * [Repository Contents](#repository-contents)
     * [TC-Bench Test Suite & Evaluation Tools](#tc-bench-test-suite--evaluation-tools)
     * [CircuitMind Framework](#circuitmind-framework)
+    * [Multi-Agent Implementation](#multi-agent-implementation)
 * [Open Source Plan (To-Do List)](#open-source-plan-to-do-list)
 * [Read Our Paper](#read-our-paper)
 * [Citation](#citation)
@@ -94,13 +96,24 @@ This directory contains the source code for the CircuitMind multi-agent framewor
 * Instructions on how to set up, configure, and run the CircuitMind framework can be found in the README file within this directory.
 * **[Click here to view the CircuitMind code and usage instructions](https://github.com/BUAA-CLab/CircuitMind/blob/main/CircuitMind/README.md)**
 
+### Multi-Agent Implementation
+
+We have developed an advanced multi-agent implementation that enhances the original CircuitMind approach with sophisticated agent collaboration and RAG-enhanced generation.
+
+* **Agent Architecture**: Features specialized agents (CoderAgent, Reviewer, Executor, UserProxy, Summarizer) working in coordinated workflows
+* **RAG Integration**: Knowledge-driven design with retrieval-augmented generation using local Ollama models
+* **Robust Execution**: Comprehensive error handling, timeout protection, and automated debugging
+* **Flexible Configuration**: YAML-based configuration supporting multiple LLM providers
+
+**📚 [Multi-Agent Framework Documentation](./Multi-Agents/Multi-Agents-README.md)** | **🌐 [中文文档](./Multi-Agents/Multi-Agents-README-CN.md)**
+
 -----
 <div id="open-source-plan-to-do-list"></div>
 
 ## Open Source Plan (To-Do List)
 
 - ✅ **TC-Bench Test Suite & Evaluation Tools** - Released!
-- [ ] **CircuitMind Multi-Agent Framework** - To be released soon after paper acceptance. Stay tuned!
+- ✅ **CircuitMind Multi-Agent Framework** - Released! Advanced implementation with sophisticated agent collaboration
 
 -----
 <div id="read-our-paper"></div>

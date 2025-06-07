@@ -1,0 +1,5 @@
+root_dir: ./TC/Datasets-TC
+target_experiments:
+- ./TC/Easy/1_not_gate
+- ./TC/Easy/2_second_tick
+- ./TC/Easy/3_xor_gate

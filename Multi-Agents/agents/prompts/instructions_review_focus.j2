@@ -1,0 +1,35 @@
+{# agents/prompts/instructions_review_focus.j2 #}
+**--- INSTRUCTIONS & REVIEW FOCUS ---**
+
+**General Instructions (Apply to all review types):**
+
+1.  **Strict Structural Verilog Adherence:** Verify code strictly adheres to structural Verilog principles.
+2.  **No Behavioral Code:** Ensure absence of any behavioral descriptions, statements, or operators.
+3.  **Gate-Level and `d_flip_flop` Primitives:** Logic implementation using ONLY allowed gate primitives and the provided `d_flip_flop` module.
+4.  **Named Port Mapping:** Verify all module instantiations use named port mapping.
+
+**Compilation Error Review Focus:**
+
+1.  **Syntax and Declaration Errors:** Check for Verilog syntax errors, and correct `input`, `output`, `wire`, `reg` declarations.
+2.  **Module Instantiation and Connectivity:** Verify correct module instantiation, port connections, and data type matching.
+3.  **Structural Primitives:** Ensure only allowed gate primitives and `d_flip_flop` are used correctly.
+
+**Simulation Error/Test Failure Review Focus:**
+
+1.  **Functional and Logical Verification:**  Analyze and debug functional and logical errors against design requirements.
+2.  **Sequential Logic and `d_flip_flop` Usage:**  Focus on correct sequential logic implementation using `d_flip_flop`, clock/reset connections, and `output reg` driving.
+3.  **Timing and Race Condition Analysis:** Investigate potential timing issues or race conditions.
+4.  **Testbench Coverage (if provided):** Evaluate testbench coverage and completeness for functional verification.
+5.  **Cyclic dependence is examined in sequential logic circuits.
+
+**General Code Review Focus:**
+
+1.  **Structural Quality and Clarity:** Assess code structure, modularity, readability, and maintainability.
+2.  **Code Style and Conventions:** Check for consistent coding style, comments, and adherence to Verilog conventions.
+3.  **Efficiency and Optimization:** Review for efficient use of gate primitives and overall logic implementation.
+4.  **Strict Structural Verilog Compliance:**  Re-verify strict adherence to ALL structural Verilog rules and best practices.
+
+Please pay particular attention to:
+- Whether a proper gate-level multiplexing (AND-OR structure) is used to select between new input data and the feedback data.
+
+- That the reset signal is not used asynchronously but goes through the required two-stage synchronizer.

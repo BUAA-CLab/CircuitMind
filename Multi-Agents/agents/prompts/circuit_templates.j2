@@ -1,0 +1,47 @@
+**--- Circuit Template Library ---**
+
+**1. Synchronized Reset Template**
+```verilog
+// Reset synchronizer
+wire sync_rst;
+d_flip_flop sync_ff1 (.clk(clk), .d(async_rst), .q(stage1));
+d_flip_flop sync_ff2 (.clk(clk), .d(stage1), .q(sync_rst));
+```
+
+**2. Full Adder Template**
+```verilog
+// 1-bit full adder implementation
+wire sum, carry_out;
+xor g1 (sum, a, b, cin);
+and g2 (w1, a, b);
+and g3 (w2, a, cin);
+and g4 (w3, b, cin);
+or  g5 (carry_out, w1, w2, w3);
+```
+
+**3. Safe Mode Selection Template**
+```verilog
+// Conflict-free mode selection
+genvar i;
+generate
+    for(i=0; i<8; i=i+1) begin : mode_mux
+        wire mode0_bit, mode1_bit;
+        and g_m0 (mode0_bit, ~mode, inc_data[i]);
+        and g_m1 (mode1_bit, mode, write_data[i]);
+        or  g_sel (selected_bit, mode0_bit, mode1_bit);
+    end
+endgenerate
+```
+
+**4. Ripple Carry Adder Template**
+```verilog
+// 8-bit ripple carry adder
+genvar i;
+generate
+    for(i=0; i<8; i=i+1) begin : adder_chain
+        wire cin = (i==0) ? 1'b1 : carry[i-1];
+        // Instantiate full adder gates here
+    end
+endgenerate
+```
+

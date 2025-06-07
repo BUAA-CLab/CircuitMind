@@ -1,0 +1,26 @@
+[
+  {
+    "class":"best_practices",
+    "module_name": "port_declaration",
+    "practice_title": "Clear Port Declarations",
+    "practice_description": "Always declare ports with explicit directions (input/output) and types (wire/reg) for better readability and fewer synthesis issues.",
+    "code_example": "module good_module (\n    input wire clk,\n    input wire [7:0] data_in,\n    output reg [7:0] data_out\n);",
+    "tags": ["best_practice", "module", "syntax", "ports"]
+  },
+  {
+    "class":"best_practices",
+    "module_name": "synchronous_reset",
+    "practice_title": "Use Synchronous Resets",
+    "practice_description": "Prefer synchronous resets for better synthesis results and avoiding metastability issues in most FPGA designs.",
+    "code_example": "// Good practice - synchronous reset\nalways @(posedge clk) begin\n    if (rst)\n        q <= 1'b0;\n    else\n        q <= d;\nend",
+    "tags": ["best_practice", "reset", "synchronous", "flip_flop"]
+  },
+  {
+    "class":"best_practices",
+    "module_name": "gate_instantiation",
+    "practice_title": "Proper Gate Instantiation",
+    "practice_description": "When instantiating primitive gates, use positional port connections rather than named connections. Named connections are used for module instantiations only.",
+    "code_example": "// Correct gate instantiation\nand a1(out, in1, in2);\nor o1(out, in1, in2, in3);\n\n// For module instantiation, named connections are preferred\nmy_module m1(\n    .clk(clk),\n    .data_in(data),\n    .data_out(result)\n);",
+    "tags": ["best_practice", "gate", "primitive", "instantiation"]
+  }
+]

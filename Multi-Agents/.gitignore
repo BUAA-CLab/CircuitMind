@@ -1,0 +1,88 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+log.log
+
+# Configuration files with secrets
+configs/models/*_private.yaml
+configs/environments/*_private.yaml
+**/api_keys.yaml
+**/secrets.yaml
+
+# Output directories
+outputs/
+experiments_output/
+verilog_projects/
+TC/Datasets-TC/*/verilog_projects/
+TC/Datasets-TC/*/experiment.log
+TC/Datasets-TC/*/summary.txt
+
+# OS
+.DS_Store
+Thumbs.db
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+
+# Model files and large data
+*.bin
+*.safetensors
+lora_model*/
+model_*/
+_unsloth_sentencepiece_temp/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# RAG data
+knowledge_base/Model-incrementment/*.json
+knowledge_base/RAG-data/
+
+# Test outputs
+test_output/
+benchmark_results/ 

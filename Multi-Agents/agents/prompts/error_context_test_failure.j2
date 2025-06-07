@@ -1,0 +1,14 @@
+{# agents/prompts/error_context_test_failure.j2 #}
+{% set error_context %}
+**Test Failure Analysis Checklist**:
+1. [ ] Verify feedback path implementation using AND-OR gates
+2. [ ] Check reset signal synchronization (2 DFF stages)
+3. [ ] Validate stored data persistence through 3 clock cycles
+4. [ ] Inspect D flip-flop reset connection (must use sync_rst)
+5. [ ] Check write_enable logic doesn't directly drive DFF inputs
+
+**Common Defect Patterns**:
+- Missing feedback path causing data loss
+- Improper reset synchronization leading to metastability
+- Direct connection of control signals to DFF inputs
+{% endset %}

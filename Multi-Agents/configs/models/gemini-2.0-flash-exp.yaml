@@ -1,0 +1,7 @@
+api_keys:
+- AI-xxx
+
+base_url: https://generativelanguage.googleapis.com/v1beta/
+max_retries: 3
+temperature: 0.7
+timeout: 30

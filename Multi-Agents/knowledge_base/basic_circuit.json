@@ -1,0 +1,42 @@
+[
+  {
+    "snippet_id": "gate_and_001",
+    "language": "verilog",
+    "module_name": "and_gate",
+    "description": "Basic 2-input AND gate.",
+    "code": "module and_gate (\n    input a,\n    input b,\n    output y\n);\n    assign y = a & b;\nendmodule",
+    "input_ports": [
+      {"name": "a", "type": "wire", "description": "First input signal."},
+      {"name": "b", "type": "wire", "description": "Second input signal."}
+    ],
+    "output_ports": [
+      {"name": "y", "type": "wire", "description": "Output signal (a AND b)."}
+    ],
+    "instantiation_example": "and_gate inst_and (.a(input1), .b(input2), .y(output_wire));",
+    "context": "Fundamental logic gate, used in various combinational circuits.",
+    "keywords": ["verilog", "basic gate", "and", "combinational logic"],
+    "tags": ["logic gate", "combinational"]
+  },
+
+  {
+    "snippet_id": "d_flip_flop_001",
+    "language": "verilog",
+    "module_name": "d_flip_flop",
+    "description": "Basic D Flip-Flop with synchronous reset, implemented using fundamental NAND logic gates, providing both Q and Q_not outputs.",
+    "code": "module d_flip_flop (\n    input clk,\n    input rst,      // Synchronous reset, active high\n    input d,\n    output q,\n    output q_not\n);\n    wire Y1,Y2,Y3,Y4,Y5,Y6;\n    wire Y3_1;\n    wire d1;\n    wire rst_;\n\n    nor g8 (rst_, rst);\n    and g9 (d1, rst_, d);\n\n    nand g1 (Y1, Y2, Y4);\n    nand g2 (Y2, clk, Y1);\n    and g3_1 (Y3_1, clk, Y2);\n    nand g3 (Y3, Y3_1, Y4);\n    nand g4 (Y4, Y3, d1);\n    nand g5 (Y5, Y2, Y6);\n    nand g6 (Y6, Y3, Y5);\n    assign      q = Y5;\n    nor g7 (q_not, q);\n\nendmodule",
+    "input_ports": [
+        {"name": "clk", "type": "wire", "description": "Clock signal."},
+        {"name": "rst", "type": "wire", "description": "Synchronous reset signal (active high)."},
+        {"name": "d", "type": "wire", "description": "Data input."}
+    ],
+    "output_ports": [
+        {"name": "q", "type": "wire", "description": "Normal output of the flip-flop."},
+        {"name": "q_not", "type": "wire", "description": "Inverted output of the flip-flop."}
+    ],
+    "instantiation_example": "d_flip_flop inst_dff (.clk(clock_sig), .rst(reset_sig), .d(data_in), .q(data_out), .q_not(data_out_inv));",
+    "context": "Fundamental D Flip-Flop design using basic NAND gates, featuring synchronous reset and both Q and Q_not outputs.",
+    "keywords": ["verilog", "d flip-flop", "basic implementation", "nand gates", "primitive gates", "synchronous reset", "q", "q_not", "sequential logic"],
+    "tags": ["sequential", "flip-flop", "reset", "q", "q_not", "basic gates"]
+}
+  
+]

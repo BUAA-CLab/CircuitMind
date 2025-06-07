@@ -1,0 +1,9 @@
+{# agents/prompts/error_context_general.j2 #}
+{% set error_context %}
+**General Code Review:** Conduct a comprehensive review for high-quality structural Verilog code adhering to best practices. Focus on:
+- **Overall Structural Quality:** Code structure, modularity, clarity, organization, and ease of understanding.
+- **Efficient Gate Primitive Usage:** Optimized and efficient implementation of logic using allowed gate primitives.
+- **Module Instantiation Best Practices:** Correct and efficient module instantiation, especially `d_flip_flop`, with named port mapping.
+- **Readability and Maintainability:** Code readability, comments, consistent coding conventions, and overall maintainability.
+- **Strict Structural Verilog Adherence:** Verify strict adherence to all structural Verilog principles, including prohibitions on behavioral constructs and correct `output reg` driving.
+{% endset %}

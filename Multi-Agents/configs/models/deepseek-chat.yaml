@@ -1,0 +1,6 @@
+api_keys:
+- sk-xxx
+base_url: https://api.deepseek.com
+max_retries: 3
+temperature: 0.7
+timeout: 30

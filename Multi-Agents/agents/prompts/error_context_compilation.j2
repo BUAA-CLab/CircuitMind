@@ -1,0 +1,8 @@
+{# agents/prompts/error_context_compilation.j2 #}
+{% set error_context %}
+**Compilation Error Detected!** Focus your review on identifying and correcting compilation errors related to structural Verilog. Specifically examine:
+- **Verilog Syntax:** Typos, incorrect keywords, and violations of Verilog syntax rules.
+- **Module Definition and Instantiation:** Correct module definitions, proper instantiation with named port mapping, and accurate port connections.
+- **Port Declarations and Connections:** Verify `input`, `output`, `inout` declarations, data type consistency, and correct port connections during module instantiation.
+- **Structural Primitives Usage:** Ensure only allowed gate primitives (`and`, `or`, `not`, `nand`, `nor`, `xor`, `xnor`) and the provided `d_flip_flop` module are used and instantiated correctly.
+{% endset %}

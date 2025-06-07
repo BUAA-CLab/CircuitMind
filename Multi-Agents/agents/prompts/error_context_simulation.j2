@@ -1,0 +1,8 @@
+{# agents/prompts/error_context_simulation.j2 #}
+{% set error_context %}
+**Simulation Failure Root Cause Analysis:**
+1. **Reset Synchronization Check**: Verify 2-stage DFF sync for reset
+2. **Carry Chain Validation**: Confirm proper adder carry propagation
+3. **Mode Switching Glitch**: Analyze mode select signal transitions
+4. **Setup/Hold Violation**: Check clock vs combinational logic delay
+{% endset %}
