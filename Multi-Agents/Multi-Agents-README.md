@@ -1,4 +1,4 @@
-# CircuitMind Multi-Agent Framework
+a# CircuitMind Multi-Agent Framework
 
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
@@ -40,7 +40,7 @@
 
 ```bash
 # 1. Clone the project
-git clone <repository-url>
+git clone https://github.com/BUAA-CLab/CircuitMind.git
 cd CircuitMind/Multi-Agents
 
 # 2. Create virtual environment (recommended)

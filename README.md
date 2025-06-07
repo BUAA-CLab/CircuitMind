@@ -23,7 +23,7 @@
   [![License](https://img.shields.io/github/license/BUAA-CLab/CircuitMind.svg)](https://github.com/BUAA-CLab/CircuitMind/blob/main/LICENSE)
   [![Python Version](https://img.shields.io/badge/python-3.x-blue)](https://www.python.org/) <div>&nbsp;</div>
 
-  [📚 Framework README](https://github.com/BUAA-CLab/CircuitMind/blob/main/CircuitMind/README.md) |
+  [📚 Framework README](./README.md) |
   [🤖 Multi-Agent Framework](./Multi-Agents/Multi-Agents-README.md) |
   [💾 TC-Bench Dataset README](https://github.com/BUAA-CLab/CircuitMind/blob/main/TC-Bench/README.md) |
   [📝 Paper](https://arxiv.org/pdf/2504.14625v3) |
@@ -94,7 +94,7 @@ This directory contains the complete TC-Bench benchmark dataset for evaluation.
 This directory contains the source code for the CircuitMind multi-agent framework.
 
 * Instructions on how to set up, configure, and run the CircuitMind framework can be found in the README file within this directory.
-* **[Click here to view the CircuitMind code and usage instructions](https://github.com/BUAA-CLab/CircuitMind/blob/main/CircuitMind/README.md)**
+* **[Click here to view the CircuitMind code and usage instructions](./README.md)**
 
 ### Multi-Agent Implementation
 

@@ -21,9 +21,9 @@
   [![License](https://img.shields.io/github/license/BUAA-CLab/CircuitMind.svg)](https://github.com/BUAA-CLab/CircuitMind/blob/main/LICENSE)
   [![Python Version](https://img.shields.io/badge/python-3.x-blue)](https://www.python.org/) <div>&nbsp;</div>
 
-  [📚 项目框架 README](https://github.com/BUAA-CLab/CircuitMind/blob/main/CircuitMind/README.md) |
+  [📚 项目框架 README](./README.md) |
   [🤖 多智能体框架](./Multi-Agents/Multi-Agents-README-CN.md) |
-  [💾 TC-Bench 数据集 README](https://github.com/BUAA-CLab/CircuitMind/blob/main/TC-Bench/README.md) |
+  [💾 TC-Bench 数据集 README](./TC-Bench/README.md) |
   [📝 论文](https://arxiv.org/pdf/2504.14625v3) |
   [🐛 报告问题](https://github.com/BUAA-CLab/CircuitMind/issues/new/choose)
 
@@ -92,7 +92,7 @@
 此目录包含 CircuitMind 多智能体框架的源代码。
 
 * 关于如何设置、配置和运行 CircuitMind 框架的说明，请参见此目录下的 README 文件。
-* **[点击此处查看 CircuitMind 多智能体框架使用说明](https://github.com/BUAA-CLab/CircuitMind/blob/main/Multi-Agents/Multi-Agents-README-CN.md)**
+* **[点击此处查看 CircuitMind 多智能体框架使用说明](./Multi-Agents/Multi-Agents-README-CN.md)**
 
 ### 多智能体实现
 
@@ -112,7 +112,6 @@
 
 - ✅ **TC-Bench 测试集与评估工具** - 已开源！
 - ✅ **CircuitMind 多智能体框架** - 已开源！具有复杂智能体协作的高级实现
-- [ ] **原始 CircuitMind 框架** - 论文接收后将开源，敬请期待！
 
 -----
 <div id="read-our-paper"></div>

@@ -40,7 +40,7 @@
 
 ```bash
 # 1. 克隆项目
-git clone <repository-url>
+git clone https://github.com/BUAA-CLab/CircuitMind.git
 cd CircuitMind/Multi-Agents
 
 # 2. 创建虚拟环境 (推荐)

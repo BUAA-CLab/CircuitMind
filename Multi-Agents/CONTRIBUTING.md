@@ -12,7 +12,7 @@
 ### 提交代码
 1. **Fork 项目**
    ```bash
-   git clone https://github.com/your-username/CircuitMind-Lite.git
+   git clone https://github.com/BUAA-CLab/CircuitMind.git
    cd CircuitMind-Lite
    ```
 
@@ -102,15 +102,14 @@ python -m pytest tests/test_specific.py
 
 ### 1. 克隆项目
 ```bash
-git clone https://github.com/your-username/CircuitMind-Lite.git
+git clone https://github.com/BUAA-CLab/CircuitMind.git
 cd CircuitMind-Lite
 ```
 
 ### 2. 创建虚拟环境
 ```bash
-python -m venv venv
-source venv/bin/activate  # Linux/macOS
-# 或 venv\Scripts\activate  # Windows
+conda create -n circuitmind python=3.11
+conda activate circuitmind
 ```
 
 ### 3. 安装依赖
